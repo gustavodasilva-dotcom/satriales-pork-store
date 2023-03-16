@@ -17,6 +17,11 @@ app.use(express.json());
 
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path}`);
+    next();
+});
+
 app.use('/api/v1/register', require('./routes/v1/register'));
 app.use('/api/v1/auth', require('./routes/v1/auth'));
 app.use('/api/v1/refresh', require('./routes/v1/refresh'));

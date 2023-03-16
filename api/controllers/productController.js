@@ -6,6 +6,15 @@ const { v4: uuid } = require('uuid');
 const fsPromises = require('fs').promises;
 const path = require('path');
 
+const handleGetProducts = (req, res) => {
+  const products = data.products;
+  if (products.length > 0) {
+    res.json([...products]);
+  } else {
+    res.sendStatus(204);
+  }
+};
+
 const handleNewProduct = async (req, res) => {
   const { name, description, price } = req.body;
   if (!name || !description || !price) return res.status(400).json('Name, description and price are required');
@@ -27,4 +36,4 @@ const handleNewProduct = async (req, res) => {
   }
 };
 
-module.exports = { handleNewProduct };
+module.exports = { handleGetProducts, handleNewProduct };
