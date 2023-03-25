@@ -6,4 +6,9 @@ router.route('/')
   .get(productController.handleGetProducts)
   .post(productController.handleNewProduct);
 
+router.route('/:id')
+  .get(productController.handleGetProduct)
+  .put(productController.handleUpdateProduct)
+  .delete(productController.handleDeleteProduct);
+
 module.exports = router;

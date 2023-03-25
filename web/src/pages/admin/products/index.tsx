@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Edit, DeleteForever } from '@mui/icons-material';
 
+const URL = 'v2/products';
+
 const ProductsAdmin = () => {
   const axiosPrivate = useAxiosPrivate();
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -17,14 +19,14 @@ const ProductsAdmin = () => {
 
     const getProducts = async () => {
       try {
-        const response = await axiosPrivate.get<IProduct[]>('v2/products', {
+        const response = await axiosPrivate.get<IProduct[]>(URL, {
           signal: controller.signal
         });
         console.log(response.data);
         isMounted && setProducts(response.data);
       } catch (error) {
         console.error(error);
-        //navigate('/admin/login', { state: { from: location }, replace: true });
+        navigate('/admin/login', { state: { from: location }, replace: true });
       }
     };
 
@@ -34,7 +36,19 @@ const ProductsAdmin = () => {
       isMounted = false;
       controller.abort();
     };
-  }, [axiosPrivate]);
+  }, []);
+
+  const deleteProduct = (id: string) => {
+    axiosPrivate.delete(`${URL}/${id}`)
+      .then(() => {
+        const otherProducts = products.filter(product => product.uuid !== id);
+        setProducts([...otherProducts]);
+      })
+      .catch(error => {
+        console.error(error);
+        navigate('/admin/login', { state: { from: location }, replace: true });
+      })
+  }
 
   return (
     <>
@@ -51,9 +65,6 @@ const ProductsAdmin = () => {
                 <b>Name</b>
               </TableCell>
               <TableCell>
-                <b>Description</b>
-              </TableCell>
-              <TableCell>
                 <b>Price</b>
               </TableCell>
               <TableCell>
@@ -62,13 +73,10 @@ const ProductsAdmin = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product, index) => (
+            {products && products.map((product, index) => (
               <TableRow key={index}>
                 <TableCell>
                   {product?.name}
-                </TableCell>
-                <TableCell>
-                  {product?.description}
                 </TableCell>
                 <TableCell>
                   $ {product?.price.toFixed(2).toString()}
@@ -77,7 +85,10 @@ const ProductsAdmin = () => {
                   <Link to={`/admin/products/${product.uuid}`}>
                     <Edit color='primary' />
                   </Link>
-                  <DeleteForever color='error' />
+                  <DeleteForever
+                    color='error'
+                    onClick={() => deleteProduct(product.uuid)}
+                  />
                 </TableCell>
               </TableRow>
             ))}
