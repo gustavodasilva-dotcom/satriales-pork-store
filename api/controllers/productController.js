@@ -1,102 +1,77 @@
-const data = {
-  products: require('../models/products.json'),
-  setProducts: function (data) { this.products = data }
-};
-const { v4: uuid } = require('uuid');
-const fsPromises = require('fs').promises;
-const path = require('path');
+const Product = require('../models/Product');
 
-const handleGetProducts = (req, res) => {
-  const products = data.products;
-
-  if (products.length > 0) {
-    res.json([...products]);
-  } else {
-    res.sendStatus(204);
-  }
-};
-
-const handleNewProduct = async (req, res) => {
-  const { name, description, price } = req.body;
-  if (!name || !description || !price) return res.status(400).json('Name, description and price are required');
-
-  const newProduct = {
-    "uuid": uuid(),
-    "name": name,
-    "description": description,
-    "price": parseFloat(price)
-  };
-
+const handleGetProducts = async (req, res) => {
   try {
-    data.setProducts([...data.products, newProduct]);
-
-    await fsPromises.writeFile(
-      path.join(__dirname, '..', 'models', 'products.json'),
-      JSON.stringify(data.products)
-    );
-
-    res.status(201).json({ ...newProduct });
+    const products = await Product.find();
+    res.json(products);
   } catch (error) {
     res.status(500).json({ 'message': error.message });
   }
 };
 
-const handleGetProduct = (req, res) => {
+const handleGetProduct = async (req, res) => {
   const { id } = req.params;
-  const product = data.products.find(product => product.uuid === id);
-  if (!product) return res.sendStatus(404);
 
-  return res.json({ ...product });
+  try {
+    const product = await Product.findById(id);
+    if (!product) return res.sendStatus(404);
+
+    return res.json(product);
+  } catch (error) {
+    res.status(500).json({ 'message': error.message });
+  }
+};
+
+const handleNewProduct = async (req, res) => {
+  const { name, description, price } = req.body;
+  if (!name || !description || !price) return res.sendStatus(400);
+
+  try {
+    const result = Product.create({
+      "name": name,
+      "description": description,
+      "price": parseFloat(price)
+    });
+
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ 'message': error.message });
+  }
 };
 
 const handleUpdateProduct = async (req, res) => {
+  if (!req?.body) return res.sendStatus(400);
+
   const { id } = req.params;
-  const { name, description, price } = req.body;
-  if (!name || !description || !price) return res.status(400).json('Name, description and price are required');
-
-  const product = data.products.find(product => product.uuid === id);
-  if (!product) return res.sendStatus(404);
-
-  const updatedProduct = {
-    "uuid": product.uuid,
-    "name": name,
-    "description": description,
-    "price": parseFloat(price)
-  };
 
   try {
-    const otherProducts = data.products.filter(product => product.uuid !== updatedProduct.uuid);
-    data.setProducts([...otherProducts, updatedProduct]);
+    const product = await Product.findById(id);
+    if (!product) return res.sendStatus(404);
 
-    await fsPromises.writeFile(
-      path.join(__dirname, '..', 'models', 'products.json'),
-      JSON.stringify(data.products)
-    );
+    if (req.body?.name) product.name = req.body.name;
+    if (req.body?.description) product.description = req.body.description;
+    if (req.body?.price) product.price = parseFloat(req.body.price);
 
-    res.json({ ...updatedProduct });
+    const result = await product.save();
+
+    res.json(result);
   } catch (error) {
-    return res.status(500).json({ 'message': error.message });
+    res.status(500).json({ 'message': err.message });
   }
 };
 
 const handleDeleteProduct = async (req, res) => {
   const { id } = req.params;
 
-  const product = data.products.find(product => product.uuid === id);
-  if (!product) return res.sendStatus(404);
-
   try {
-    const otherProducts = data.products.filter(product => product.uuid !== product.uuid)
-    data.setProducts([...otherProducts]);
+    const product = await Product.findById(id);
+    if (!product) return res.sendStatus(404);
 
-    await fsPromises.writeFile(
-      path.join(__dirname, '..', 'models', 'products.json'),
-      JSON.stringify(otherProducts)
-    );
+    const result = await product.deleteOne();
 
-    res.sendStatus(204);
+    res.json(result);
   } catch (error) {
-    return res.status(500).json({ 'message': error.message });
+    res.status(500).json({ 'message': err.message });
   }
 };
 

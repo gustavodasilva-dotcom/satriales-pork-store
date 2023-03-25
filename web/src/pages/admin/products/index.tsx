@@ -19,10 +19,9 @@ const ProductsAdmin = () => {
 
     const getProducts = async () => {
       try {
-        const response = await axiosPrivate.get<IProduct[]>(URL, {
+        const response = await axiosPrivate.get(URL, {
           signal: controller.signal
         });
-        console.log(response.data);
         isMounted && setProducts(response.data);
       } catch (error) {
         console.error(error);
@@ -41,7 +40,7 @@ const ProductsAdmin = () => {
   const deleteProduct = (id: string) => {
     axiosPrivate.delete(`${URL}/${id}`)
       .then(() => {
-        const otherProducts = products.filter(product => product.uuid !== id);
+        const otherProducts = products.filter(product => product._id !== id);
         setProducts([...otherProducts]);
       })
       .catch(error => {
@@ -79,15 +78,15 @@ const ProductsAdmin = () => {
                   {product?.name}
                 </TableCell>
                 <TableCell>
-                  $ {product?.price.toFixed(2).toString()}
+                  $ {product?.price.$numberDecimal.toString()}
                 </TableCell>
                 <TableCell>
-                  <Link to={`/admin/products/${product.uuid}`}>
+                  <Link to={`/admin/products/${product._id}`}>
                     <Edit color='primary' />
                   </Link>
                   <DeleteForever
                     color='error'
-                    onClick={() => deleteProduct(product.uuid)}
+                    onClick={() => deleteProduct(product._id)}
                   />
                 </TableCell>
               </TableRow>

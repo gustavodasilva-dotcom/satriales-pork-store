@@ -22,7 +22,7 @@ const ProductsFormAdmin = () => {
       .then(res => {
         setName(res.data.name);
         setDescription(res.data.description);
-        setPrice(res.data.price.toString());
+        setPrice(res.data.price.$numberDecimal);
       })
   };
 
