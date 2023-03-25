@@ -3,12 +3,13 @@ import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Paper
 import useAuth from 'hooks/useAuth';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useState } from 'react';
-import { Link as RouterLink, Outlet } from 'react-router-dom';
+import { Link as RouterLink, Outlet, useNavigate } from 'react-router-dom';
 
 const HeaderBarAdmin = () => {
   const { setAuth } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
 
   const handleMenu = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -22,7 +23,7 @@ const HeaderBarAdmin = () => {
     axiosPrivate.get('v1/logout')
       .then(() => {
         setAuth('');
-        handleClose();
+        navigate('/admin/login');
       })
       .catch(error => console.log(error));
   };
@@ -79,7 +80,7 @@ const HeaderBarAdmin = () => {
         </Container>
       </AppBar>
       <Box>
-        <Container maxWidth='md' sx={{ marginTop: 1 }}>
+        <Container maxWidth='lg' sx={{ marginTop: 1 }}>
           <Paper sx={{ p: 2 }}>
             <Outlet />
           </Paper>

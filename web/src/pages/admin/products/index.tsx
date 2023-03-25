@@ -2,20 +2,39 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { IProduct } from 'interfaces/IProduct';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Edit, DeleteForever } from '@mui/icons-material';
 
 const ProductsAdmin = () => {
   const axiosPrivate = useAxiosPrivate();
   const [products, setProducts] = useState<IProduct[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    axiosPrivate.get<IProduct[]>('v2/products')
-      .then(res => {
-        setProducts(res.data);
-        console.log(products);
-      })
-      .catch(() => console.log('Error'));
-  }, []);
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const getProducts = async () => {
+      try {
+        const response = await axiosPrivate.get<IProduct[]>('v2/products', {
+          signal: controller.signal
+        });
+        console.log(response.data);
+        isMounted && setProducts(response.data);
+      } catch (error) {
+        console.error(error);
+        //navigate('/admin/login', { state: { from: location }, replace: true });
+      }
+    };
+
+    getProducts();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [axiosPrivate]);
 
   return (
     <>
@@ -29,45 +48,39 @@ const ProductsAdmin = () => {
           <TableHead>
             <TableRow>
               <TableCell>
-                Name
+                <b>Name</b>
               </TableCell>
               <TableCell>
-                Description
+                <b>Description</b>
               </TableCell>
               <TableCell>
-                Price
+                <b>Price</b>
               </TableCell>
               <TableCell>
-                Options
+                <b>Options</b>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {products.map((product, index) => (
+            {products.map((product, index) => (
               <TableRow key={index}>
                 <TableCell>
                   {product?.name}
                 </TableCell>
                 <TableCell>
-                  <Link
-                    to={'/admin/restaurantes'}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <Button variant='outlined' color='primary'>
-                      Editar
-                    </Button>
-                  </Link>
+                  {product?.description}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant='outlined'
-                    color='error'
-                  >
-                    Excluir
-                  </Button>
+                  $ {product?.price.toFixed(2).toString()}
+                </TableCell>
+                <TableCell>
+                  <Link to={`/admin/products/${product.uuid}`}>
+                    <Edit color='primary' />
+                  </Link>
+                  <DeleteForever color='error' />
                 </TableCell>
               </TableRow>
-            ))} */}
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
