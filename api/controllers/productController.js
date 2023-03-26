@@ -3,6 +3,8 @@ const Product = require('../models/Product');
 const handleGetProducts = async (req, res) => {
   try {
     const products = await Product.find();
+    if (!products) return res.sendStatus(204);
+
     res.json(products);
   } catch (error) {
     res.status(500).json({ 'message': error.message });
@@ -75,4 +77,11 @@ const handleDeleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { handleGetProducts, handleNewProduct, handleGetProduct, handleGetProduct, handleUpdateProduct, handleDeleteProduct };
+module.exports = {
+  handleGetProducts,
+  handleNewProduct,
+  handleGetProduct,
+  handleGetProduct,
+  handleUpdateProduct,
+  handleDeleteProduct
+};
