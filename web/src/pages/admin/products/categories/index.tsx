@@ -1,14 +1,14 @@
+import { DeleteForever, Edit } from '@mui/icons-material';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { IProduct } from 'interfaces/IProduct';
+import { IProductCategory } from 'interfaces/IProductCategory';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Edit, DeleteForever } from '@mui/icons-material';
 
-const URL = 'v2/products';
+const URL = 'v2/productsCategories';
 
-const ProductsAdmin = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
+const Categories = () => {
+  const [categories, setCategories] = useState<IProductCategory[]>([]);
   
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
@@ -18,41 +18,41 @@ const ProductsAdmin = () => {
     let isMounted = true;
     const controller = new AbortController();
 
-    const getProducts = async () => {
+    const getCategories = async () => {
       try {
-        const response = await axiosPrivate.get<IProduct[]>(URL, {
+        const response = await axiosPrivate.get<IProductCategory[]>(URL, {
           signal: controller.signal
         });
-        isMounted && setProducts(response.data);
+        isMounted && setCategories(response.data);
       } catch (error) {
         console.error(error);
         navigate('/admin/login', { state: { from: location }, replace: true });
       }
     };
 
-    getProducts();
+    getCategories();
 
     return () => {
       isMounted = false;
       controller.abort();
     };
   }, []);
-
-  const deleteProduct = (id: string) => {
+  
+  const deleteCategory = (id: string) => {
     axiosPrivate.delete(`${URL}/${id}`)
       .then(() => {
-        const otherProducts = products.filter(product => product._id !== id);
-        setProducts([...otherProducts]);
+        const otherCategories = categories.filter(category => category._id !== id);
+        setCategories([...otherCategories]);
       })
       .catch(error => {
         console.error(error);
         navigate('/admin/login', { state: { from: location }, replace: true });
-      });
+      })
   };
 
   return (
     <>
-      <Link to='/admin/products/new' style={{ textDecoration: 'none' }}>
+      <Link to='/admin/products/categories/new' style={{ textDecoration: 'none' }}>
         <Button variant='contained' color='primary'>
           Novo
         </Button>
@@ -65,29 +65,23 @@ const ProductsAdmin = () => {
                 <b>Name</b>
               </TableCell>
               <TableCell>
-                <b>Price</b>
-              </TableCell>
-              <TableCell>
                 <b>Options</b>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {products && products.map((product, index) => (
+            {categories && categories.map((category, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  {product?.name}
+                  {category?.name}
                 </TableCell>
                 <TableCell>
-                  $ {product?.price.$numberDecimal.toString()}
-                </TableCell>
-                <TableCell>
-                  <Link to={`/admin/products/${product._id}`}>
+                  <Link to={`/admin/products/${category._id}`}>
                     <Edit color='primary' />
                   </Link>
                   <DeleteForever
                     color='error'
-                    onClick={() => deleteProduct(product._id)}
+                    onClick={() => deleteCategory(category._id)}
                   />
                 </TableCell>
               </TableRow>
@@ -99,4 +93,4 @@ const ProductsAdmin = () => {
   );
 };
 
-export default ProductsAdmin;
+export default Categories;

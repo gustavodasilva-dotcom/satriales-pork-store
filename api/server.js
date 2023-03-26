@@ -32,6 +32,8 @@ app.use('/api/v1/auth', require('./routes/v1/auth'));
 app.use('/api/v1/refresh', require('./routes/v1/refresh'));
 app.use('/api/v1/logout', require('./routes/v1/logout'));
 
+app.use('/api/v2/personalInfo', require('./routes/v2/personalInfo'));
+
 app.use(verifyJwt);
 app.use('/api/v2/products', require('./routes/v2/products'));
 app.use('/api/v2/productsCategories', require('./routes/v2/productsCategories'));

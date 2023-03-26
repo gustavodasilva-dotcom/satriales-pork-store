@@ -1,8 +1,8 @@
-const Product = require('../models/Product');
+const Product = require('../../models/Product');
 
 const handleGetProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('category');
     if (!products) return res.sendStatus(204);
 
     res.json(products);
@@ -15,7 +15,7 @@ const handleGetProduct = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate('category');
     if (!product) return res.sendStatus(404);
 
     return res.json(product);
@@ -25,14 +25,16 @@ const handleGetProduct = async (req, res) => {
 };
 
 const handleNewProduct = async (req, res) => {
-  const { name, description, price } = req.body;
-  if (!name || !description || !price) return res.sendStatus(400);
+  const { name, description, price, category, barCode } = req.body;
+  if (!name || !description || !price || !category || !barCode) return res.sendStatus(400);
 
   try {
     const result = Product.create({
       "name": name,
       "description": description,
-      "price": parseFloat(price)
+      "price": parseFloat(price),
+      "category": category,
+      "barCode": barCode
     });
 
     res.status(201).json(result);
@@ -53,6 +55,8 @@ const handleUpdateProduct = async (req, res) => {
     if (req.body?.name) product.name = req.body.name;
     if (req.body?.description) product.description = req.body.description;
     if (req.body?.price) product.price = parseFloat(req.body.price);
+    if (req.body?.category) product.category = req.body.category;
+    if (req.body?.barCode) product.barCode = req.body.barCode;
 
     const result = await product.save();
 

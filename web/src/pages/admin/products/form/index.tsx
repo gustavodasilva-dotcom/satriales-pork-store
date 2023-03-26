@@ -1,9 +1,10 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { styles } from './styles';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IProduct } from 'interfaces/IProduct';
+import { IProductCategory } from 'interfaces/IProductCategory';
 
 const URL = 'v2/products';
 
@@ -11,6 +12,9 @@ const ProductsFormAdmin = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [category, setCategory] = useState('');
+  const [barCode, setBarCode] = useState<Number>();
+  const [categories, setCategories] = useState<IProductCategory[]>([]);
 
   const { id } = useParams();
 
@@ -23,7 +27,22 @@ const ProductsFormAdmin = () => {
         setName(res.data.name);
         setDescription(res.data.description);
         setPrice(res.data.price.$numberDecimal);
+        setCategory(res.data.category._id);
+        setBarCode(res.data.barCode);
       })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
+  const getCategories = () => {
+    axiosPrivate.get<IProduct[]>('v2/productsCategories')
+      .then(res => {
+        setCategories(res.data);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   const onSave = (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,7 +62,9 @@ const ProductsFormAdmin = () => {
       data: {
         name,
         description,
-        price
+        price,
+        category,
+        barCode
       }
     })
       .then(() => navigate('/admin/products'))
@@ -53,6 +74,8 @@ const ProductsFormAdmin = () => {
   };
 
   useEffect(() => {
+    getCategories();
+    
     id && getProduct();
   }, []);
 
@@ -85,6 +108,41 @@ const ProductsFormAdmin = () => {
           label='Price'
           value={price}
           onChange={e => setPrice(e.target.value)}
+          variant='standard'
+          fullWidth
+          required
+          margin='dense'
+        />
+        <FormControl fullWidth>
+          <InputLabel
+            id='products-categories-label'
+            sx={styles.select}
+          >
+            Category
+          </InputLabel>
+          <Select
+            labelId='products-categories-label'
+            id='products-categories'
+            value={category}
+            label='Category'
+            onChange={e => setCategory(e.target.value)}
+            sx={styles.select}
+          >
+            {categories.map((item, index) => (
+              <MenuItem
+                key={index}
+                value={item._id}
+              >
+                {item.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <TextField
+          type='number'
+          label='Bar code'
+          value={barCode || ''}
+          onChange={e => setBarCode(Number(e.target.value))}
           variant='standard'
           fullWidth
           required

@@ -4,6 +4,7 @@ import useAuth from 'hooks/useAuth';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useState } from 'react';
 import { Link as RouterLink, Outlet, useNavigate } from 'react-router-dom';
+import { styles } from './styles';
 
 const HeaderBarAdmin = () => {
   const { setAuth } = useAuth();
@@ -39,9 +40,19 @@ const HeaderBarAdmin = () => {
               </Typography>
             </Link>
             <Box sx={{ display: 'flex', flexGrow: 1 }}>
-              <Link component={RouterLink} to='/admin/products'>
+              <Link component={RouterLink} to='checkout'>
+                <Button sx={{ my: 2, color: 'white', margin: 2 }}>
+                  Checkout
+                </Button>
+              </Link>
+              <Link component={RouterLink} to='products'>
                 <Button sx={{ my: 2, color: 'white', margin: 2 }}>
                   Products
+                </Button>
+              </Link>
+              <Link component={RouterLink} to='products/categories'>
+                <Button sx={{ my: 2, color: 'white', margin: 2 }}>
+                  Products' Categories
                 </Button>
               </Link>
             </Box>
@@ -71,9 +82,30 @@ const HeaderBarAdmin = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Personal info</MenuItem>
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
-                <MenuItem onClick={handleLogOut}>Sair</MenuItem>
+                <Link
+                  component={RouterLink}
+                  to='personal-info'
+                  sx={styles.dfMenuItem}
+                >
+                  <MenuItem onClick={handleClose}>
+                    Personal info
+                  </MenuItem>
+                </Link>
+                <Link
+                  component={RouterLink}
+                  to='settings'
+                  sx={styles.dfMenuItem}
+                >
+                  <MenuItem onClick={handleClose}>
+                    Settings
+                  </MenuItem>
+                </Link>
+                <MenuItem
+                  onClick={handleLogOut}
+                  sx={styles.lgMenuItem}
+                >
+                  Log out
+                </MenuItem>
               </Menu>
             </div>
           </Toolbar>

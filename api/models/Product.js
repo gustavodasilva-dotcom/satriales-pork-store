@@ -13,6 +13,15 @@ const productSchema = new Schema({
   price: {
     type: Schema.Types.Decimal128,
     required: true
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'ProductCategory',
+    required: true
+  },
+  barCode: {
+    type: Number,
+    required: true
   }
 });
 

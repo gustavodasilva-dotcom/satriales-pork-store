@@ -1,4 +1,4 @@
-const ProductCategory = require('../models/ProductCategory');
+const ProductCategory = require('../../models/ProductCategory');
 
 const handleGetProductsCategories = async (req, res) => {
   try {

@@ -8,9 +8,6 @@ export const styles = {
   boxForm: {
     width: '100%'
   },
-  select: {
-    marginTop: 2
-  },
   button: {
     marginTop: 2
   }
