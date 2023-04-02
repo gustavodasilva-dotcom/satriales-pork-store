@@ -1,10 +1,9 @@
-import { Box } from '@mui/material';
+import SearchProduct from 'components/admin/SearchProduct';
 
 const Checkout = () => {
   return (
     <>
-      <Box>
-      </Box>
+      <SearchProduct />
     </>
   );
 };
