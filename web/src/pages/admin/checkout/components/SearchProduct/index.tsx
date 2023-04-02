@@ -1,11 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Button, IconButton, Paper, TextField, Tooltip } from '@mui/material';
 import { HelpOutlineRounded } from '@mui/icons-material';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { IProduct } from 'interfaces/IProduct';
 import AdvancedSearch from './AdvancedSearch';
+import { ISearchProductProps } from './types';
 
-const SearchProduct = () => {
+const SearchProduct: FC<ISearchProductProps> = ({
+  productsToList,
+  setProductsToList
+}) => {
   const [_products, _setProducts] = useState<IProduct[]>([]);
   const [_productFound, _setProductFound] = useState<IProduct | undefined>();
   const [_productBarCode, _setProductBarCode] = useState('');
@@ -68,6 +72,16 @@ const SearchProduct = () => {
     _setProductTotalPrice(totalPrice.toFixed(2));
   };
 
+  const _addProduct = () => {
+    setProductsToList([...productsToList, {
+      quantity: Number(_productQtt),
+      product: _productFound
+    }]);
+    _setProductBarCode('');
+    _setProductQtt('1');
+    _setProductFound(undefined);
+  };
+
   useEffect(() => {
     _getProducts();
     _productBarCodeRef.current?.focus();
@@ -122,7 +136,7 @@ const SearchProduct = () => {
             <TextField
               type='text'
               label='Unitary price'
-              value={_productFound.price.$numberDecimal}
+              value={Number(_productFound.price.$numberDecimal).toFixed(2)}
               sx={{ marginRight: 2 }}
               margin='dense'
               disabled
@@ -130,7 +144,7 @@ const SearchProduct = () => {
             <TextField
               type='text'
               label='Total product price'
-              value={_productTotalPrice}
+              value={Number(_productTotalPrice).toFixed(2)}
               margin='dense'
               disabled
             />
@@ -149,6 +163,7 @@ const SearchProduct = () => {
               type='button'
               variant='contained'
               ref={_addProductRef}
+              onClick={_addProduct}
             >
               Add Product
             </Button>
