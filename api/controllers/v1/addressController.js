@@ -87,7 +87,7 @@ const handleGetBrazilianAddressByZipCode = async (req, res) => {
         }
       }
 
-      streetFound = streetFound = await Street.findOne({ zipCode: zipcode }).populate('neighborhood city state country');;
+      streetFound = await Street.findOne({ zipCode: zipcode }).populate('neighborhood city state country');;
     } catch (error) {
       const axiosStatusCode = error?.response?.status;
       const statusCode = axiosStatusCode ? axiosStatusCode : 500;
