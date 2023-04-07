@@ -1,29 +1,35 @@
 import { Box, Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import axios from 'api/axios';
 import { IAddress } from 'interfaces/IAddress';
-import { useState } from 'react';
+import { FC, useState } from 'react';
+import { IAddressProps } from './types';
 
-const AddressForm = () => {
+const AddressForm: FC<IAddressProps> = ({
+  streetId,
+  setStreetId,
+  number,
+  setNumber,
+  complement,
+  setComplement
+}) => {
   const [zipCode, setZipCode] = useState('');
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-  const [complement, setComplement] = useState('');
   const [neighborhood, setNeighborhood] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
   const [brazilianAddress, setBrazilianAddress] = useState(false);
 
-  const cleanFields = (autocompletedOnly: boolean = true) => {
+  const cleanFields = (cleanZipCode: boolean) => {
+    if (cleanZipCode) {
+      setZipCode('');
+    }
+    
     setName('');
     setNeighborhood('');
     setCity('');
     setState('');
     setCountry('');
-
-    if (autocompletedOnly) return;
-
-    setZipCode('');
     setNumber('');
     setComplement('');
   };
@@ -31,24 +37,27 @@ const AddressForm = () => {
   const handleCheckBrazilianAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     setBrazilianAddress(checked);
-    !checked && cleanFields(false);
+    cleanFields(true);
   };
 
   const handleZipCode = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const zipCode = e.target.value;
     setZipCode(zipCode);
 
-    brazilianAddress && getAddressByZipCode(zipCode);
+    if (brazilianAddress) {
+      getAddressByZipCode(zipCode);
+    }
   };
 
   const getAddressByZipCode = (zipCode: string) => {
-    cleanFields();
+    cleanFields(false);
 
     if (zipCode.length === 8) {
       axios.get<IAddress>(`v1/address/zipcode/${zipCode}`)
         .then(res => {
           const data = res.data;
 
+          setStreetId(data._id);
           setZipCode(data.zipCode);
           setName(data.name);
           setNeighborhood(data.neighborhood.name);
@@ -75,6 +84,10 @@ const AddressForm = () => {
           label='Brazilian address'
         />
       </FormGroup>
+      <input
+        type='hidden'
+        value={streetId}
+      />
       <Box>
         <TextField
           label='Zip code'

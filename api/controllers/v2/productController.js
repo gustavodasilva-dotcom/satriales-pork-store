@@ -1,13 +1,15 @@
+const errorHandler = require('../../middlewares/errorHandler');
 const Product = require('../../models/Product');
+const productSchema = require('../../validators/product');
 
 const handleGetProducts = async (req, res) => {
   try {
     const products = await Product.find().populate('category');
-    if (!products) return res.sendStatus(204);
+    if (!products.length === 0) return res.sendStatus(204);
 
     res.json(products);
   } catch (error) {
-    res.status(500).json({ 'message': error.message });
+    errorHandler(error, res);
   }
 };
 
@@ -20,49 +22,55 @@ const handleGetProduct = async (req, res) => {
 
     return res.json(product);
   } catch (error) {
-    res.status(500).json({ 'message': error.message });
+    errorHandler(error, res);
   }
 };
 
 const handleNewProduct = async (req, res) => {
-  const { name, description, price, category, barCode } = req.body;
-  if (!name || !description || !price || !category || !barCode) return res.sendStatus(400);
+  const body = req.body;
 
   try {
-    const result = Product.create({
-      "name": name,
-      "description": description,
-      "price": parseFloat(price),
-      "category": category,
-      "barCode": barCode
+    const validBody = productSchema.validateSync(body, {
+      abortEarly: false,
+      stripUnknown: true
     });
 
-    res.status(201).json(result);
+    const productFound = await Product.findOne({ barCode: validBody.barCode });
+    if (productFound) return res.status(409).json({ 'message': `There is already a product with the bar code ${validBody.barCode}` });
+
+    const result = await Product.create({ ...validBody });
+    const newProduct = await Product.findById(result._id).populate('category');
+
+    res.status(201).json(newProduct);
   } catch (error) {
-    res.status(500).json({ 'message': error.message });
+    errorHandler(error, res);
   }
 };
 
 const handleUpdateProduct = async (req, res) => {
-  if (!req?.body) return res.sendStatus(400);
-
+  const body = req.body;
   const { id } = req.params;
 
   try {
     const product = await Product.findById(id);
     if (!product) return res.sendStatus(404);
 
-    if (req.body?.name) product.name = req.body.name;
-    if (req.body?.description) product.description = req.body.description;
-    if (req.body?.price) product.price = parseFloat(req.body.price);
-    if (req.body?.category) product.category = req.body.category;
-    if (req.body?.barCode) product.barCode = req.body.barCode;
+    const validBody = productSchema.validateSync(body, {
+      abortEarly: false,
+      stripUnknown: true
+    });
+
+    product.name = validBody.name;
+    product.description = validBody.description;
+    product.price = validBody.price;
+    product.category = validBody.category;
+    product.barCode = validBody.barCode;
 
     const result = await product.save();
 
     res.json(result);
   } catch (error) {
-    res.status(500).json({ 'message': err.message });
+    errorHandler(error, res);
   }
 };
 
@@ -77,7 +85,7 @@ const handleDeleteProduct = async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    res.status(500).json({ 'message': err.message });
+    errorHandler(error, res);
   }
 };
 

@@ -45,6 +45,11 @@ const HeaderBarAdmin = () => {
                   Checkout
                 </Button>
               </Link>
+              <Link component={RouterLink} to='clients'>
+                <Button sx={{ my: 2, color: 'white', margin: 2 }}>
+                  Clients
+                </Button>
+              </Link>
               <Link component={RouterLink} to='products'>
                 <Button sx={{ my: 2, color: 'white', margin: 2 }}>
                   Products

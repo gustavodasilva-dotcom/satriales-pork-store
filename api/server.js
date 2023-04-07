@@ -37,6 +37,7 @@ app.use('/api/v2/personalInfo', require('./routes/v2/personalInfo'));
 app.use(verifyJwt);
 app.use('/api/v2/products', require('./routes/v2/products'));
 app.use('/api/v2/productsCategories', require('./routes/v2/productsCategories'));
+app.use('/api/v2/person', require('./routes/v2/person'));
 
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');
