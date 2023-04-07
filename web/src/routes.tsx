@@ -11,6 +11,8 @@ import ProductsAdmin from 'pages/admin/products';
 import ProductsFormAdmin from 'pages/admin/products/form';
 import ProductsCategoriesAdmin from 'pages/admin/products/categories';
 import ProductsCategoriesFormAdmin from 'pages/admin/products/categories/form';
+import ClientsAdmin from 'pages/admin/clients';
+import ClientsFormAdmin from 'pages/admin/clients/form';
 
 const AppRouter = () => {
   return (
@@ -35,6 +37,10 @@ const AppRouter = () => {
                 <Route path='products/categories' element={<ProductsCategoriesAdmin />} />
                 <Route path='products/categories/new' element={<ProductsCategoriesFormAdmin />} />
                 <Route path='products/categories/:id' element={<ProductsCategoriesFormAdmin />} />
+
+                <Route path='clients' element={<ClientsAdmin />} />
+                <Route path='clients/new' element={<ClientsFormAdmin />} />
+                <Route path='clients/:id' element={<ClientsFormAdmin />} />
               </Route>
             </Route>
           </Route>
