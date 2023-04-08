@@ -3,7 +3,7 @@ import { Box, Button, IconButton, Paper, TextField, Tooltip } from '@mui/materia
 import { HelpOutlineRounded } from '@mui/icons-material';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { IProduct } from 'interfaces/IProduct';
-import AdvancedSearch from './AdvancedSearch';
+import AdvancedSearch from './components/AdvancedSearch';
 import { ISearchProductProps } from './types';
 
 const SearchProduct: FC<ISearchProductProps> = ({

@@ -1,12 +1,15 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { DeleteForever, Edit } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { IProductListProps } from './types';
 import { IProductCheckout } from 'interfaces/IProductCheckout';
 
 const ProductsList: FC<IProductListProps> = ({ productsToCheckout }) => {
   const [_purchaseTotalPrice, _setPurchaseTotalPrice] = useState('');
   const [_ableGoToPayment, _setAbleGoToPayment] = useState(true);
+
+  const navigate = useNavigate();
 
   const _calcProductPrice = (checkoutItem: IProductCheckout): Number => {
     const productPrice = checkoutItem.product?.price.$numberDecimal!;
@@ -51,6 +54,7 @@ const ProductsList: FC<IProductListProps> = ({ productsToCheckout }) => {
             variant='contained'
             size='medium'
             disabled={_ableGoToPayment}
+            onClick={() => navigate('payment')}
           >
             Go to payment
           </Button>

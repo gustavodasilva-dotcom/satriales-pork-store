@@ -26,6 +26,19 @@ const handleGetNaturalPerson = async (req, res) => {
   }
 };
 
+const handleGetNaturalPersonBySsn = async (req, res) => {
+  const { ssn } = req.params;
+
+  try {
+    const naturalPerson = await NaturalPerson.findOne({ ssn: ssn }).populate('street');
+    if (!naturalPerson) return res.sendStatus(404);
+
+    res.json(naturalPerson);
+  } catch (error) {
+    errorHandler(error, res);    
+  }
+};
+
 const handleNewNaturalPerson = async (req, res) => {
   const body = req.body;
 
@@ -92,6 +105,7 @@ const handleDeleteNaturalPerson = async (req, res) => {
 module.exports = {
   handleGetNaturalPersons,
   handleGetNaturalPerson,
+  handleGetNaturalPersonBySsn,
   handleNewNaturalPerson,
   handleUpdateNaturalPerson,
   handleDeleteNaturalPerson
