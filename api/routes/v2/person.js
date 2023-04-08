@@ -6,4 +6,9 @@ router.route('/natural')
   .get(naturalPersonController.handleGetNaturalPersons)
   .post(naturalPersonController.handleNewNaturalPerson);
 
+router.route('/natural/:id')
+  .get(naturalPersonController.handleGetNaturalPerson)
+  .put(naturalPersonController.handleUpdateNaturalPerson)
+  .delete(naturalPersonController.handleDeleteNaturalPerson);
+
 module.exports = router;

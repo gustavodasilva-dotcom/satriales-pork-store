@@ -38,6 +38,18 @@ const ClientsAdmin = () => {
     };
   }, []);
 
+  const deleteClient = (id: string) => {
+    axiosPrivate.delete(`${URL}/${id}`)
+      .then(() => {
+        const otherClients = clients.filter(client => client._id !== id);
+        setClients([...otherClients]);
+      })
+      .catch(error => {
+        console.error(error);
+        navigate('/admin/login', { state: { from: location }, replace: true });
+      });
+  };
+
   return (
     <>
       <Link to='/admin/clients/new' style={{ textDecoration: 'none' }}>
@@ -75,7 +87,7 @@ const ClientsAdmin = () => {
                   </Link>
                   <DeleteForever
                     color='error'
-                    // onClick={() => deleteProduct(product._id)}
+                    onClick={() => deleteClient(client._id)}
                   />
                 </TableCell>
               </TableRow>

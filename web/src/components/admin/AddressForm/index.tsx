@@ -1,75 +1,72 @@
 import { Box, Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
 import axios from 'api/axios';
 import { IAddress } from 'interfaces/IAddress';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { IAddressProps } from './types';
 
 const AddressForm: FC<IAddressProps> = ({
   streetId,
   setStreetId,
+  zipCode,
+  setZipCode,
   number,
   setNumber,
   complement,
-  setComplement
+  setComplement,
+  brazilianAddress,
+  setBrazilianAddress
 }) => {
-  const [zipCode, setZipCode] = useState('');
   const [name, setName] = useState('');
   const [neighborhood, setNeighborhood] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
-  const [brazilianAddress, setBrazilianAddress] = useState(false);
 
-  const cleanFields = (cleanZipCode: boolean) => {
+  const cleanFiels = (cleanZipCode: boolean = false) => {
     if (cleanZipCode) {
       setZipCode('');
     }
-    
+
+    setStreetId('');
     setName('');
+    setNumber('');
+    setComplement('');
     setNeighborhood('');
     setCity('');
     setState('');
     setCountry('');
-    setNumber('');
-    setComplement('');
   };
 
-  const handleCheckBrazilianAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-    setBrazilianAddress(checked);
-    cleanFields(true);
-  };
-
-  const handleZipCode = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const zipCode = e.target.value;
-    setZipCode(zipCode);
-
-    if (brazilianAddress) {
-      getAddressByZipCode(zipCode);
+  const getAddressByZipCode = () => {
+    if (zipCode.length !== 8) {
+      cleanFiels();
+      return;
     }
+
+    axios.get<IAddress>(`v1/address/zipcode/${zipCode}`)
+      .then(res => {
+        const data = res.data;
+
+        setBrazilianAddress(data.isBrazilianAddress);
+        setStreetId(data._id);
+        setZipCode(data.zipCode);
+        setName(data.name);
+        setNeighborhood(data.neighborhood.name);
+        setCity(data.city.name);
+        setState(data.state.initials);
+        setCountry(data.country.name);
+      })
+      .catch(err => console.error(err));
   };
 
-  const getAddressByZipCode = (zipCode: string) => {
-    cleanFields(false);
-
-    if (zipCode.length === 8) {
-      axios.get<IAddress>(`v1/address/zipcode/${zipCode}`)
-        .then(res => {
-          const data = res.data;
-
-          setStreetId(data._id);
-          setZipCode(data.zipCode);
-          setName(data.name);
-          setNeighborhood(data.neighborhood.name);
-          setCity(data.city.name);
-          setState(data.state.initials);
-          setCountry(data.country.name);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+  const handleBrazilianAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBrazilianAddress(e.target.checked);
+    cleanFiels(true);
   };
+
+  useEffect(() => {
+    brazilianAddress && getAddressByZipCode();
+  }, [zipCode]);
 
   return (
     <Box>
@@ -78,7 +75,7 @@ const AddressForm: FC<IAddressProps> = ({
           control={
             <Checkbox
               checked={brazilianAddress}
-              onChange={handleCheckBrazilianAddress}
+              onChange={handleBrazilianAddress}
             />
           }
           label='Brazilian address'
@@ -93,7 +90,7 @@ const AddressForm: FC<IAddressProps> = ({
           label='Zip code'
           placeholder='Zip code'
           value={zipCode}
-          onChange={handleZipCode}
+          onChange={e => setZipCode(e.target.value)}
           variant='outlined'
           fullWidth
           required

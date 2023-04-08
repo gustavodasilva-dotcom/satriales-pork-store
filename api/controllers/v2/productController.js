@@ -20,7 +20,7 @@ const handleGetProduct = async (req, res) => {
     const product = await Product.findById(id).populate('category');
     if (!product) return res.sendStatus(404);
 
-    return res.json(product);
+    res.json(product);
   } catch (error) {
     errorHandler(error, res);
   }
@@ -91,9 +91,8 @@ const handleDeleteProduct = async (req, res) => {
 
 module.exports = {
   handleGetProducts,
+  handleGetProduct,
   handleNewProduct,
-  handleGetProduct,
-  handleGetProduct,
   handleUpdateProduct,
   handleDeleteProduct
 };
