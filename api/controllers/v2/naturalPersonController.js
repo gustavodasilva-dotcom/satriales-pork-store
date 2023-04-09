@@ -1,6 +1,6 @@
 const errorHandler = require('../../middlewares/errorHandler');
 const NaturalPerson = require('../../models/NaturalPerson');
-const naturalPersonSchema = require('../../validators/naturalPerson');
+const naturalPersonSchema = require('../../validators/send-natural-person.js');
 
 const handleGetNaturalPersons = async (req, res) => {
   try {

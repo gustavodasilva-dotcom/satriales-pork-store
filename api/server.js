@@ -8,6 +8,7 @@ const credentials = require('./middlewares/credentials');
 const corsOptions = require('./config/configOptions');
 const mongoose = require('mongoose');
 const connectDb = require('./config/dbConn');
+const seedPaymentTypes = require('./seeders/seedPaymentTypes');
 const PORT = process.env.PORT || 3500;
 
 connectDb();
@@ -38,8 +39,10 @@ app.use(verifyJwt);
 app.use('/api/v2/products', require('./routes/v2/products'));
 app.use('/api/v2/productsCategories', require('./routes/v2/productsCategories'));
 app.use('/api/v2/person', require('./routes/v2/person'));
+app.use('/api/v2/checkout', require('./routes/v2/checkout'));
 
-mongoose.connection.once('open', () => {
+mongoose.connection.once('open', async () => {
   console.log('Connected to MongoDB');
+  await seedPaymentTypes.exec();
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });

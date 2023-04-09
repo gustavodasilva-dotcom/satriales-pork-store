@@ -1,6 +1,6 @@
 const errorHandler = require('../../middlewares/errorHandler');
-const Product = require('../../models/Product');
-const productSchema = require('../../validators/product');
+const Product = require('../../models/product/Product');
+const productSchema = require('../../validators/send-product');
 
 const handleGetProducts = async (req, res) => {
   try {
