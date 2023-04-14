@@ -1,14 +1,14 @@
+import { FC, useEffect, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { styles } from './styles';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import AddressForm from 'components/admin/AddressForm';
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { INaturalPerson } from 'interfaces/INaturalPerson';
 
 const URL = 'v2/person/natural';
 
-const ClientsFormAdmin = () => {
+const ClientsFormAdmin: FC = () => {
   const [name, setName] = useState('');
   const [ssn, setSsn] = useState('');
   const [zipCode, setZipCode] = useState('');

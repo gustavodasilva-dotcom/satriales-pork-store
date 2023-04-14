@@ -1,15 +1,16 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { DeleteForever, Edit } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import { IProductListProps } from './types';
 import { IProductCheckout } from 'interfaces/IProductCheckout';
 
-const ProductsList: FC<IProductListProps> = ({ productsToCheckout }) => {
-  const [_purchaseTotalPrice, _setPurchaseTotalPrice] = useState('');
+const ProductsList: FC<IProductListProps> = ({
+  productsToCheckout,
+  purchaseTotalPrice,
+  setPurchaseTotalPrice,
+  goToPayments
+}) => {
   const [_ableGoToPayment, _setAbleGoToPayment] = useState(true);
-
-  const navigate = useNavigate();
 
   const _calcProductPrice = (checkoutItem: IProductCheckout): Number => {
     const productPrice = checkoutItem.product?.price.$numberDecimal!;
@@ -29,7 +30,7 @@ const ProductsList: FC<IProductListProps> = ({ productsToCheckout }) => {
     });
 
     const productPricesSum = calcProductPrices.reduce(sumProductPrices, 0);
-    _setPurchaseTotalPrice(productPricesSum.toFixed(2));
+    setPurchaseTotalPrice(productPricesSum.toFixed(2));
   };
 
   const _handleGoToPayment = () => _setAbleGoToPayment(!(productsToCheckout.length >= 1));
@@ -45,8 +46,8 @@ const ProductsList: FC<IProductListProps> = ({ productsToCheckout }) => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <TextField
             label='Total price'
-            value={_purchaseTotalPrice}
-            onChange={e => _setPurchaseTotalPrice(e.target.value)}
+            value={purchaseTotalPrice}
+            onChange={e => setPurchaseTotalPrice(e.target.value)}
             disabled
           />
           <Button
@@ -54,7 +55,7 @@ const ProductsList: FC<IProductListProps> = ({ productsToCheckout }) => {
             variant='contained'
             size='medium'
             disabled={_ableGoToPayment}
-            onClick={() => navigate('payment')}
+            onClick={goToPayments}
           >
             Go to payment
           </Button>

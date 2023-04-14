@@ -1,13 +1,13 @@
+import { FC, useEffect, useState } from 'react';
 import { DeleteForever, Edit } from '@mui/icons-material';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { INaturalPerson } from 'interfaces/INaturalPerson';
-import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const URL = 'v2/person/natural';
 
-const ClientsAdmin = () => {
+const ClientsAdmin: FC = () => {
   const [clients, setClients] = useState<INaturalPerson[]>([]);
 
   const axiosPrivate = useAxiosPrivate();

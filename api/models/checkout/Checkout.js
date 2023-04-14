@@ -11,7 +11,11 @@ const checkoutSchema = new Schema({
     ref: 'NaturalPerson'
   },
   totalPrice: Number,
-  discount: Number
+  discount: Number,
+  paymentType: {
+    type: Schema.Types.ObjectId,
+    ref: 'PaymentTypes'
+  }
 });
 
 module.exports = mongoose.model('Checkout', checkoutSchema);

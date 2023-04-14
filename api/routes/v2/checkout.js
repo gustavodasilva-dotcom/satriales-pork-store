@@ -6,4 +6,6 @@ router.post('/save-client', checkoutController.handleSaveClient);
 
 router.post('/save-products', checkoutController.handleSaveProducts);
 
+router.post('/save-payment', checkoutController.handleSavePayment);
+
 module.exports  = router;

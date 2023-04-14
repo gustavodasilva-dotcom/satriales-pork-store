@@ -1,12 +1,12 @@
+import { FC, useEffect, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { IUser } from 'interfaces/IUser';
-import { useEffect, useState } from 'react';
 import { styles } from './styles';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 
 const URL = 'v2/personalInfo';
 
-const PersonalInfo = () => {
+const PersonalInfo: FC = () => {
   const [name, setName] = useState<string | undefined>('');
   const [email, setEmail] = useState('');
 

@@ -1,4 +1,6 @@
-const HomeAdmin = () => {
+import { FC } from 'react';
+
+const HomeAdmin: FC = () => {
   return (
     <>
     </>

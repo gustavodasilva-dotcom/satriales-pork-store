@@ -1,13 +1,13 @@
+import { FC, useEffect, useState } from 'react';
 import { DeleteForever, Edit } from '@mui/icons-material';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { IProductCategory } from 'interfaces/IProductCategory';
-import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const URL = 'v2/productsCategories';
 
-const Categories = () => {
+const Categories: FC = () => {
   const [categories, setCategories] = useState<IProductCategory[]>([]);
   
   const axiosPrivate = useAxiosPrivate();

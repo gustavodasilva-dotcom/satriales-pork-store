@@ -77,8 +77,9 @@ const AdvancedSearch: FC<IAdvancedSearchProps> = ({
               {_productsFiltered.map((item, index) => (
                 <ListItemButton
                   key={index}
+                  onClick={() => _handleProductFound(item._id)}
                 >
-                  <ListItemText primary={item.name} onClick={() => _handleProductFound(item._id)} />
+                  <ListItemText primary={item.name} />
                 </ListItemButton>
               ))}
             </List>

@@ -3,6 +3,7 @@ const Checkout = require('../../models/checkout/Checkout');
 const ProductCheckout = require('../../models/checkout/ProductCheckout');
 const saveClientSchema = require('../../validators/checkout/save-client');
 const saveProductsSchema = require('../../validators/checkout/save-products');
+const savePaymentSchema = require('../../validators/checkout/save-payment');
 
 const handleSaveClient = async (req, res) => {
   const body = req.body;
@@ -31,6 +32,12 @@ const handleSaveProducts = async (req, res) => {
       stripUnknown: true
     });
 
+    const checkout = await Checkout.findById(validBody.checkout);
+
+    checkout.totalPrice = validBody.totalPrice;
+
+    const checkoutResult = await checkout.save();
+
     const promises = validBody.products.map(async (productCheckout) => {
       return await ProductCheckout.create({
         checkout: validBody.checkout,
@@ -42,13 +49,36 @@ const handleSaveProducts = async (req, res) => {
     Promise.all(promises)
       .then(response => {
         const data = response;
-        res.status(200).json(data);
-      })
-      .catch(error => {
-        res.status(500).json({
-          'message': error.message
-        });
-      });
+
+        res.status(201).json({ ...checkoutResult._doc, products: [...data] });
+  })
+      .catch (error => {
+  res.status(500).json({
+    'message': error.message
+  });
+});
+  } catch (error) {
+  errorHandler(error, res);
+}
+};
+
+const handleSavePayment = async (req, res) => {
+  const body = req.body;
+
+  try {
+    const validBody = await savePaymentSchema.validate(body, {
+      abortEarly: false,
+      stripUnknown: true
+    });
+
+    const checkout = await Checkout.findById(validBody.checkout);
+    checkout.paymentType = validBody.paymentType;
+
+    const result = await checkout.save();
+
+    const checkoutUpdated = await Checkout.findById(result._id).populate('client paymentType');
+
+    res.json(checkoutUpdated);
   } catch (error) {
     errorHandler(error, res);
   }
@@ -56,5 +86,6 @@ const handleSaveProducts = async (req, res) => {
 
 module.exports = {
   handleSaveClient,
-  handleSaveProducts
+  handleSaveProducts,
+  handleSavePayment
 };

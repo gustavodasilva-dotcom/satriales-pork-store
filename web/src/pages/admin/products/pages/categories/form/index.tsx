@@ -1,5 +1,5 @@
+import { FC, useEffect, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { styles } from './styles';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { IProductCategory } from 'interfaces/IProductCategory';
 
 const URL = 'v2/productsCategories';
 
-const ProductsFormAdmin = () => {
+const ProductsFormAdmin: FC = () => {
   const [name, setName] = useState('');
 
   const { id } = useParams();

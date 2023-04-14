@@ -1,17 +1,11 @@
-import {
-  Box,
-  Button,
-  Container,
-  Paper,
-  TextField
-} from '@mui/material';
+import { FC, useState } from 'react';
+import { Box, Button, Container, Paper, TextField } from '@mui/material';
 import { styles } from './styles';
 import axios from 'api/axios';
-import { useState } from 'react';
 import useAuth from 'hooks/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const LoginAdmin = () => {
+const LoginAdmin: FC = () => {
   const { setAuth } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

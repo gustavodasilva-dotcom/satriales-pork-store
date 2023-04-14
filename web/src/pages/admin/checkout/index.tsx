@@ -5,6 +5,7 @@ import AdminModal from 'components/admin/AdminModal';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
 import { INaturalPerson } from 'interfaces/INaturalPerson';
+import { ICheckout } from 'interfaces/ICheckout';
 
 const Checkout: FC = () => {
   const [clientSsn, setClientSsn] = useState('');
@@ -12,7 +13,7 @@ const Checkout: FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalMsg, setModalMsg] = useState('');
-  const [continueWithoutClient, setContinueWithoutClient] = useState(false);
+  const [useClient, setUseClient] = useState(false);
   const [disableContinueButton, setDisableContinueButton] = useState(true);
 
   const ssnRef = useRef<HTMLInputElement>(null);
@@ -20,8 +21,8 @@ const Checkout: FC = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
 
-  const handleContinueWithoutClient = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setContinueWithoutClient(e.target.checked);
+  const handleUseClient = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUseClient(e.target.checked);
     setClientSsn('');
     setClientSearched(undefined);
   };
@@ -38,25 +39,51 @@ const Checkout: FC = () => {
   };
 
   const handleDisableContinueButton = () => {
-    if (continueWithoutClient || clientSearched) {
+    if (useClient || clientSearched) {
       setDisableContinueButton(false);
     } else {
       setDisableContinueButton(true);
+      setClientSearched(undefined);
     }
   };
 
   const handleClientSearch = () => {
-    axiosPrivate.get<INaturalPerson>(`v2/person/natural/${clientSsn}`)
+    if (clientSsn) {
+      axiosPrivate.get<INaturalPerson>(`v2/person/natural/${clientSsn}`)
+        .then(res => {
+          const data = res.data;
+          setClientSearched(data);
+        })
+        .catch(error => {
+          setOpenModal(true);
+          setModalTitle('Ops!');
+
+          if (error.response.status === 404) {
+            setModalMsg('Client not found');
+          } else {
+            setModalMsg('Error while contacting the server');
+          }
+        });
+    }
+  };
+
+  const handleCheckoutClient = () => {
+    const data = {
+      "useClient": !useClient,
+      "client": clientSearched?._id
+    };
+
+    axiosPrivate.post<ICheckout>('v2/checkout/save-client', data)
       .then(res => {
         const data = res.data;
-        setClientSearched(data);
+        navigate(`products/${data._id}`);
       })
       .catch(error => {
         setOpenModal(true);
         setModalTitle('Ops!');
 
-        if (error.response.status === 404) {
-          setModalMsg('Client not found');
+        if (error.response.status === 400) {
+          setModalMsg('Wrong data sent to the server. Please, contact your administrator');
         } else {
           setModalMsg('Error while contacting the server');
         }
@@ -69,7 +96,7 @@ const Checkout: FC = () => {
 
   useEffect(() => {
     handleDisableContinueButton();
-  }, [continueWithoutClient, clientSearched]);
+  }, [useClient, clientSearched]);
 
   return (
     <Box>
@@ -92,13 +119,13 @@ const Checkout: FC = () => {
         inputRef={ssnRef}
         onChange={handleInputSearch}
         onKeyDown={handleKeySearchEvent}
-        disabled={continueWithoutClient}
+        disabled={useClient}
       />
       <IconButton
         aria-label='search'
         onClick={handleClientSearch}
         size='large'
-        disabled={continueWithoutClient}
+        disabled={useClient}
       >
         <Search />
       </IconButton>
@@ -106,8 +133,8 @@ const Checkout: FC = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={continueWithoutClient}
-              onChange={handleContinueWithoutClient}
+              checked={useClient}
+              onChange={handleUseClient}
             />
           }
           label='Continue without informed client'
@@ -138,7 +165,7 @@ const Checkout: FC = () => {
       <Button
         type='submit'
         variant='contained'
-        onClick={() => navigate('products')}
+        onClick={handleCheckoutClient}
         disabled={disableContinueButton}
         fullWidth
       >

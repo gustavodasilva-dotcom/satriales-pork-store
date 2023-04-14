@@ -1,6 +1,6 @@
 import AdminLogin from 'pages/admin/login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from 'context/AuthProvider';
+import { AuthProvider } from 'context/Auth/AuthProvider';
 import RequireAuth from 'components/RequireAuth';
 import PersistLogin from 'components/PersistLogin';
 import Checkout from 'pages/admin/checkout';
@@ -31,8 +31,8 @@ const AppRouter = () => {
                 <Route path='personal-info' element={<PersonalInfoAdmin />} />
                 
                 <Route path='checkout' element={<Checkout />} />
-                <Route path='checkout/products' element={<CheckoutProducts />} />
-                <Route path='checkout/payment' element={<CheckoutPayment />} />
+                <Route path='checkout/products/:id' element={<CheckoutProducts />} />
+                <Route path='checkout/payment/:id' element={<CheckoutPayment />} />
 
                 <Route path='products' element={<ProductsAdmin />} />
                 <Route path='products/new' element={<ProductsFormAdmin />} />

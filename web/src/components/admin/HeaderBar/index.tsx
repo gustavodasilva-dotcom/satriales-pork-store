@@ -2,11 +2,11 @@ import { AccountCircle } from '@mui/icons-material';
 import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Paper, Toolbar, Typography } from '@mui/material';
 import useAuth from 'hooks/useAuth';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Link as RouterLink, Outlet, useNavigate } from 'react-router-dom';
 import { styles } from './styles';
 
-const HeaderBarAdmin = () => {
+const HeaderBarAdmin: FC = () => {
   const { setAuth } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const axiosPrivate = useAxiosPrivate();

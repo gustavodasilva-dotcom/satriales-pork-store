@@ -77,6 +77,7 @@ const SearchProduct: FC<ISearchProductProps> = ({
       quantity: Number(_productQtt),
       product: _productFound
     }]);
+
     _setProductBarCode('');
     _setProductQtt('1');
     _setProductFound(undefined);

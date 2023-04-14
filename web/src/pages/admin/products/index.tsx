@@ -1,13 +1,13 @@
+import { FC, useEffect, useState } from 'react';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { IProduct } from 'interfaces/IProduct';
-import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Edit, DeleteForever } from '@mui/icons-material';
 
 const URL = 'v2/products';
 
-const ProductsAdmin = () => {
+const ProductsAdmin: FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   
   const axiosPrivate = useAxiosPrivate();

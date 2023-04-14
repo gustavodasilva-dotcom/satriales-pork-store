@@ -41,7 +41,21 @@ const saveProductsSchema = yup.object({
             .number()
             .required()
         })
-    )
+    ),
+  totalPrice: yup
+    .string()
+    .required()
+    .test((value, ctx) => {
+      const validPrice = parseFloat(value);
+
+      if (isNaN(validPrice)) {
+        return ctx.createError({
+          message: 'Invalid total price'
+        });
+      }
+
+      return true;
+    })
 }).test((value, ctx) => {
   if (value.products.length === 0) {
     return ctx.createError({
