@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, IconButton, Paper, TextField, Typography } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import AdminModal from 'components/admin/AdminModal';
+import AdminModal from 'components/Admin/AdminModal';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
 import { INaturalPerson } from 'interfaces/INaturalPerson';

@@ -1,9 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { DeleteForever, Edit } from '@mui/icons-material';
-import { IProductListProps } from './types';
-import { IProductCheckout } from 'interfaces/IProductCheckout';
 import CalculateProductPrice from 'utils/CalculateProductPrice';
+import { IProductListProps } from './types';
 
 const ProductsList: FC<IProductListProps> = ({
   productsToCheckout,

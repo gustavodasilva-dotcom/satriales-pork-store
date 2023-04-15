@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import PaymentType from './components/PaymentType/PaymentType';
 import ProductsList from './components/ProductsList/ProductsList';
-import AdminModal from 'components/admin/AdminModal';
+import AdminModal from 'components/Admin/AdminModal';
 import { ICheckout } from 'interfaces/ICheckout';
 import { ReactComponent as SvgSuccessfulPurchase } from 'assets/svgs/undrawSuccessfulPurchase.svg';
 

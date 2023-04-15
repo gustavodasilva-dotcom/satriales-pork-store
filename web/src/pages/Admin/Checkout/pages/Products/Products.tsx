@@ -2,11 +2,11 @@ import { FC, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import SearchProduct from '../../components/SearchProduct';
+import SearchProduct from '../../components/SearchProduct/SearchProduct';
 import ProductList from '../../components/ProductsList';
 import { IProductCheckout } from 'interfaces/IProductCheckout';
 import { ICheckout } from 'interfaces/ICheckout';
-import AdminModal from 'components/admin/AdminModal';
+import AdminModal from 'components/Admin/AdminModal';
 
 const CheckoutProducts: FC = () => {
   const [_productsToList, _setProductToList] = useState<IProductCheckout[]>([]);

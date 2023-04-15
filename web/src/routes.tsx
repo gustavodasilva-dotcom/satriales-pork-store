@@ -1,20 +1,20 @@
-import AdminLogin from 'pages/admin/login';
+import AdminLogin from 'pages/Admin/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from 'context/Auth/AuthProvider';
 import RequireAuth from 'components/RequireAuth';
 import PersistLogin from 'components/PersistLogin';
-import Checkout from 'pages/admin/checkout';
-import CheckoutProducts from 'pages/admin/checkout/pages/products';
-import CheckoutPayment from 'pages/admin/checkout/pages/payment';
-import AdminHome from 'pages/admin/home';
-import HeaderBarAdmin from 'components/admin/HeaderBar';
-import PersonalInfoAdmin from 'pages/admin/personalInfo';
-import ProductsAdmin from 'pages/admin/products';
-import ProductsFormAdmin from 'pages/admin/products/pages/form';
-import ProductsCategoriesAdmin from 'pages/admin/products/pages/categories';
-import ProductsCategoriesFormAdmin from 'pages/admin/products/pages/categories/form';
-import ClientsAdmin from 'pages/admin/clients';
-import ClientsFormAdmin from 'pages/admin/clients/pages/form';
+import Checkout from 'pages/Admin/Checkout';
+import CheckoutProducts from 'pages/Admin/Checkout/pages/Products';
+import CheckoutPayment from 'pages/Admin/Checkout/pages/Payment';
+import AdminHome from 'pages/Admin/Home';
+import HeaderBarAdmin from 'components/Admin/HeaderBar';
+import PersonalInfoAdmin from 'pages/Admin/PersonalInfo';
+import ProductsAdmin from 'pages/Admin/Products';
+import ProductsFormAdmin from 'pages/Admin/Products/pages/Form';
+import ProductsCategoriesAdmin from 'pages/Admin/Products/pages/Categories';
+import ProductsCategoriesFormAdmin from 'pages/Admin/Products/pages/Categories/Form';
+import ClientsAdmin from 'pages/Admin/Clients';
+import ClientsFormAdmin from 'pages/Admin/Clients/pages/Form';
 
 const AppRouter = () => {
   return (

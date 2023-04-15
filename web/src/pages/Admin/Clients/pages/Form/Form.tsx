@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { styles } from './styles';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import AddressForm from 'components/admin/AddressForm';
+import AddressForm from 'components/Admin/AddressForm';
 import { useNavigate, useParams } from 'react-router-dom';
 import { INaturalPerson } from 'interfaces/INaturalPerson';
 
