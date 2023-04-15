@@ -11,7 +11,7 @@ const AdminModal: FC<IAdminModalProps> = ({
   focusAfter,
   children
 }) => {
-  const handleClose = () => {
+  const _handleClose = () => {
     focusAfter?.current?.focus();
     setOpen(false);
   };
@@ -20,7 +20,7 @@ const AdminModal: FC<IAdminModalProps> = ({
     <div>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={_handleClose}
         aria-labelledby='modal-modal-title'
       >
         <Box sx={styles.modalBox}>

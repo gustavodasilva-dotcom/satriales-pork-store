@@ -8,124 +8,124 @@ import { INaturalPerson } from 'interfaces/INaturalPerson';
 import { ICheckout } from 'interfaces/ICheckout';
 
 const Checkout: FC = () => {
-  const [clientSsn, setClientSsn] = useState('');
-  const [clientSearched, setClientSearched] = useState<INaturalPerson>();
-  const [openModal, setOpenModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalMsg, setModalMsg] = useState('');
-  const [useClient, setUseClient] = useState(false);
-  const [disableContinueButton, setDisableContinueButton] = useState(true);
+  const [_clientSsn, _setClientSsn] = useState('');
+  const [_clientSearched, _setClientSearched] = useState<INaturalPerson>();
+  const [_openModal, _setOpenModal] = useState(false);
+  const [_modalTitle, _setModalTitle] = useState('');
+  const [_modalMsg, _setModalMsg] = useState('');
+  const [_useClient, _setUseClient] = useState(false);
+  const [_disableContinueButton, _setDisableContinueButton] = useState(true);
 
-  const ssnRef = useRef<HTMLInputElement>(null);
+  const _ssnRef = useRef<HTMLInputElement>(null);
 
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
 
-  const handleUseClient = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUseClient(e.target.checked);
-    setClientSsn('');
-    setClientSearched(undefined);
+  const _handleUseClient = (e: React.ChangeEvent<HTMLInputElement>) => {
+    _setUseClient(e.target.checked);
+    _setClientSsn('');
+    _setClientSearched(undefined);
   };
 
-  const handleKeySearchEvent = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const _handleKeySearchEvent = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
-      handleClientSearch();
+      _handleClientSearch();
     }
   };
 
-  const handleInputSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setClientSsn(e.target.value);
-    setClientSearched(undefined);
+  const _handleInputSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    _setClientSsn(e.target.value);
+    _setClientSearched(undefined);
   };
 
-  const handleDisableContinueButton = () => {
-    if (useClient || clientSearched) {
-      setDisableContinueButton(false);
+  const _handleDisableContinueButton = () => {
+    if (_useClient || _clientSearched) {
+      _setDisableContinueButton(false);
     } else {
-      setDisableContinueButton(true);
-      setClientSearched(undefined);
+      _setDisableContinueButton(true);
+      _setClientSearched(undefined);
     }
   };
 
-  const handleClientSearch = () => {
-    if (clientSsn) {
-      axiosPrivate.get<INaturalPerson>(`v2/person/natural/${clientSsn}`)
+  const _handleClientSearch = () => {
+    if (_clientSsn) {
+      _axiosPrivate.get<INaturalPerson>(`v2/persons/natural/${_clientSsn}`)
         .then(res => {
           const data = res.data;
-          setClientSearched(data);
+          _setClientSearched(data);
         })
         .catch(error => {
-          setOpenModal(true);
-          setModalTitle('Ops!');
+          _setOpenModal(true);
+          _setModalTitle('Ops!');
 
           if (error.response.status === 404) {
-            setModalMsg('Client not found');
+            _setModalMsg('Client not found');
           } else {
-            setModalMsg('Error while contacting the server');
+            _setModalMsg('Error while contacting the server');
           }
         });
     }
   };
 
-  const handleCheckoutClient = () => {
+  const _handleCheckoutClient = () => {
     const data = {
-      "useClient": !useClient,
-      "client": clientSearched?._id
+      "useClient": !_useClient,
+      "client": _clientSearched?._id
     };
 
-    axiosPrivate.post<ICheckout>('v2/checkout/save-client', data)
+    _axiosPrivate.post<ICheckout>('v2/checkouts/save-client', data)
       .then(res => {
         const data = res.data;
-        navigate(`products/${data._id}`);
+        _navigate(`products/${data._id}`);
       })
       .catch(error => {
-        setOpenModal(true);
-        setModalTitle('Ops!');
+        _setOpenModal(true);
+        _setModalTitle('Ops!');
 
         if (error.response.status === 400) {
-          setModalMsg('Wrong data sent to the server. Please, contact your administrator');
+          _setModalMsg('Wrong data sent to the server. Please, contact your administrator');
         } else {
-          setModalMsg('Error while contacting the server');
+          _setModalMsg('Error while contacting the server');
         }
       });
   };
 
   useEffect(() => {
-    ssnRef.current?.focus();
+    _ssnRef.current?.focus();
   }, []);
 
   useEffect(() => {
-    handleDisableContinueButton();
-  }, [useClient, clientSearched]);
+    _handleDisableContinueButton();
+  }, [_useClient, _clientSearched]);
 
   return (
     <Box>
       <AdminModal
-        open={openModal}
-        title={modalTitle}
-        focusAfter={ssnRef}
-        setOpen={setOpenModal} children={
+        open={_openModal}
+        title={_modalTitle}
+        focusAfter={_ssnRef}
+        setOpen={_setOpenModal} children={
           <Typography sx={{ mt: 2 }}>
-            {modalMsg}
+            {_modalMsg}
           </Typography>
         }
       />
       <TextField
         type='number'
         sx={{ width: 500 }}
-        value={clientSsn}
+        value={_clientSsn}
         label={`Enter the client's SSN`}
         placeholder={`Client's SSN`}
-        inputRef={ssnRef}
-        onChange={handleInputSearch}
-        onKeyDown={handleKeySearchEvent}
-        disabled={useClient}
+        inputRef={_ssnRef}
+        onChange={_handleInputSearch}
+        onKeyDown={_handleKeySearchEvent}
+        disabled={_useClient}
       />
       <IconButton
         aria-label='search'
-        onClick={handleClientSearch}
+        onClick={_handleClientSearch}
         size='large'
-        disabled={useClient}
+        disabled={_useClient}
       >
         <Search />
       </IconButton>
@@ -133,19 +133,19 @@ const Checkout: FC = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={useClient}
-              onChange={handleUseClient}
+              checked={_useClient}
+              onChange={_handleUseClient}
             />
           }
           label='Continue without informed client'
         />
       </FormGroup>
-      {clientSearched && (
+      {_clientSearched && (
         <Paper sx={{ p: 2, mb: 2 }}>
           <TextField
             label='Name'
             placeholder='Name'
-            value={clientSearched.name}
+            value={_clientSearched.name}
             variant='outlined'
             fullWidth
             disabled
@@ -154,7 +154,7 @@ const Checkout: FC = () => {
           <TextField
             label='SSN'
             placeholder='SSN'
-            value={clientSearched.ssn}
+            value={_clientSearched.ssn}
             variant='outlined'
             fullWidth
             disabled
@@ -165,8 +165,8 @@ const Checkout: FC = () => {
       <Button
         type='submit'
         variant='contained'
-        onClick={handleCheckoutClient}
-        disabled={disableContinueButton}
+        onClick={_handleCheckoutClient}
+        disabled={_disableContinueButton}
         fullWidth
       >
         Continue to select products

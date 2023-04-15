@@ -8,23 +8,23 @@ import { styles } from './styles';
 
 const HeaderBarAdmin: FC = () => {
   const { setAuth } = useAuth();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+  const [_anchorEl, _setAnchorEl] = useState<null | HTMLElement>(null);
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
 
-  const handleMenu = (e: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(e.currentTarget);
+  const _handleMenu = (e: React.MouseEvent<HTMLElement>) => {
+    _setAnchorEl(e.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const _handleClose = () => {
+    _setAnchorEl(null);
   };
 
-  const handleLogOut = () => {
-    axiosPrivate.get('v1/logout')
+  const _handleLogOut = () => {
+    _axiosPrivate.get('v1/logout')
       .then(() => {
         setAuth('');
-        navigate('/admin/login');
+        _navigate('/admin/login');
       })
       .catch(error => console.log(error));
   };
@@ -67,14 +67,14 @@ const HeaderBarAdmin: FC = () => {
                 aria-label='conta do usuário atual'
                 aria-controls='menu-account-appbar'
                 aria-haspopup='true'
-                onClick={handleMenu}
+                onClick={_handleMenu}
                 color='inherit'
               >
                 <AccountCircle />
               </IconButton>
               <Menu
                 id="menu-account-appbar"
-                anchorEl={anchorEl}
+                anchorEl={_anchorEl}
                 anchorOrigin={{
                   vertical: 'top',
                   horizontal: 'right',
@@ -84,15 +84,15 @@ const HeaderBarAdmin: FC = () => {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
+                open={Boolean(_anchorEl)}
+                onClose={_handleClose}
               >
                 <Link
                   component={RouterLink}
                   to='personal-info'
                   sx={styles.dfMenuItem}
                 >
-                  <MenuItem onClick={handleClose}>
+                  <MenuItem onClick={_handleClose}>
                     Personal info
                   </MenuItem>
                 </Link>
@@ -101,12 +101,12 @@ const HeaderBarAdmin: FC = () => {
                   to='settings'
                   sx={styles.dfMenuItem}
                 >
-                  <MenuItem onClick={handleClose}>
+                  <MenuItem onClick={_handleClose}>
                     Settings
                   </MenuItem>
                 </Link>
                 <MenuItem
-                  onClick={handleLogOut}
+                  onClick={_handleLogOut}
                   sx={styles.lgMenuItem}
                 >
                   Log out

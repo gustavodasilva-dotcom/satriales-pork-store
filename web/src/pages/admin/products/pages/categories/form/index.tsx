@@ -8,24 +8,24 @@ import { IProductCategory } from 'interfaces/IProductCategory';
 const URL = 'v2/productsCategories';
 
 const ProductsFormAdmin: FC = () => {
-  const [name, setName] = useState('');
+  const [_name, _setName] = useState('');
 
   const { id } = useParams();
 
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
 
-  const getProduct = () => {
-    axiosPrivate.get<IProductCategory>(`${URL}/${id}`)
+  const _getProduct = () => {
+    _axiosPrivate.get<IProductCategory>(`${URL}/${id}`)
       .then(res => {
-        setName(res.data.name);
+        _setName(res.data.name);
       })
       .catch(err => {
         console.error(err);
       });
   };
 
-  const onSave = (e: React.FormEvent<HTMLFormElement>) => {
+  const _onSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let url = URL;
@@ -36,21 +36,21 @@ const ProductsFormAdmin: FC = () => {
       url += `/${id}`;
     }
 
-    axiosPrivate.request({
+    _axiosPrivate.request({
       url,
       method,
       data: {
-        name
+        "name": _name
       }
     })
-      .then(() => navigate('/admin/products/categories'))
+      .then(() => _navigate('/admin/products/categories'))
       .catch(err => {
         console.error(err);
       });
   };
 
   useEffect(() => {
-    id && getProduct();
+    id && _getProduct();
   }, []);
 
   return (
@@ -58,12 +58,12 @@ const ProductsFormAdmin: FC = () => {
       <Box
         component='form'
         sx={styles.boxForm}
-        onSubmit={onSave}
+        onSubmit={_onSave}
       >
         <TextField
           label='Name'
-          value={name}
-          onChange={e => setName(e.target.value)}
+          value={_name}
+          onChange={e => _setName(e.target.value)}
           variant='standard'
           fullWidth
           required

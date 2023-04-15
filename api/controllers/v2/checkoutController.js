@@ -5,6 +5,24 @@ const saveClientSchema = require('../../validators/checkout/save-client');
 const saveProductsSchema = require('../../validators/checkout/save-products');
 const savePaymentSchema = require('../../validators/checkout/save-payment');
 
+const handleGetCheckout = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const checkout = await Checkout.findById(id).populate('client');
+    if (!checkout) return res.sendStatus(404);
+
+    const products = await ProductCheckout.find({ checkout: id });
+
+    return res.json({
+      ...checkout._doc,
+      products: [...products]
+    });
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};
+
 const handleSaveClient = async (req, res) => {
   const body = req.body;
 
@@ -85,6 +103,7 @@ const handleSavePayment = async (req, res) => {
 };
 
 module.exports = {
+  handleGetCheckout,
   handleSaveClient,
   handleSaveProducts,
   handleSavePayment

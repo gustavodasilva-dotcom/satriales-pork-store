@@ -9,43 +9,43 @@ import { IProductCategory } from 'interfaces/IProductCategory';
 const URL = 'v2/products';
 
 const ProductsFormAdmin: FC = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [barCode, setBarCode] = useState<Number>();
-  const [categories, setCategories] = useState<IProductCategory[]>([]);
+  const [_name, _setName] = useState('');
+  const [_description, _setDescription] = useState('');
+  const [_price, _setPrice] = useState('');
+  const [_category, _setCategory] = useState('');
+  const [_barCode, _setBarCode] = useState<Number>();
+  const [_categories, _setCategories] = useState<IProductCategory[]>([]);
 
   const { id } = useParams();
 
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
 
-  const getProduct = () => {
-    axiosPrivate.get<IProduct>(`${URL}/${id}`)
+  const _getProduct = () => {
+    _axiosPrivate.get<IProduct>(`${URL}/${id}`)
       .then(res => {
-        setName(res.data.name);
-        setDescription(res.data.description);
-        setPrice(res.data.price.$numberDecimal);
-        setCategory(res.data.category._id);
-        setBarCode(res.data.barCode);
+        _setName(res.data.name);
+        _setDescription(res.data.description);
+        _setPrice(res.data.price.$numberDecimal);
+        _setCategory(res.data.category._id);
+        _setBarCode(res.data.barCode);
       })
       .catch(err => {
         console.error(err);
       });
   };
 
-  const getCategories = () => {
-    axiosPrivate.get<IProduct[]>('v2/productsCategories')
+  const _getCategories = () => {
+    _axiosPrivate.get<IProduct[]>('v2/productsCategories')
       .then(res => {
-        setCategories(res.data);
+        _setCategories(res.data);
       })
       .catch(err => {
         console.error(err);
       });
   };
 
-  const onSave = (e: React.FormEvent<HTMLFormElement>) => {
+  const _onSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let url = URL;
@@ -56,27 +56,27 @@ const ProductsFormAdmin: FC = () => {
       url += `/${id}`;
     }
 
-    axiosPrivate.request({
+    _axiosPrivate.request({
       url,
       method,
       data: {
-        name,
-        description,
-        price,
-        category,
-        barCode
+        "name": _name,
+        "description": _description,
+        "price": _price,
+        "category": _category,
+        "barCode": _barCode
       }
     })
-      .then(() => navigate('/admin/products'))
+      .then(() => _navigate('/admin/products'))
       .catch(err => {
         console.error(err);
       });
   };
 
   useEffect(() => {
-    getCategories();
+    _getCategories();
     
-    id && getProduct();
+    id && _getProduct();
   }, []);
 
   return (
@@ -84,12 +84,12 @@ const ProductsFormAdmin: FC = () => {
       <Box
         component='form'
         sx={styles.boxForm}
-        onSubmit={onSave}
+        onSubmit={_onSave}
       >
         <TextField
           label='Name'
-          value={name}
-          onChange={e => setName(e.target.value)}
+          value={_name}
+          onChange={e => _setName(e.target.value)}
           variant='standard'
           fullWidth
           required
@@ -97,8 +97,8 @@ const ProductsFormAdmin: FC = () => {
         />
         <TextField
           label='Description'
-          value={description}
-          onChange={e => setDescription(e.target.value)}
+          value={_description}
+          onChange={e => _setDescription(e.target.value)}
           variant='standard'
           fullWidth
           required
@@ -106,8 +106,8 @@ const ProductsFormAdmin: FC = () => {
         />
         <TextField
           label='Price'
-          value={price}
-          onChange={e => setPrice(e.target.value)}
+          value={_price}
+          onChange={e => _setPrice(e.target.value)}
           variant='standard'
           fullWidth
           required
@@ -123,12 +123,12 @@ const ProductsFormAdmin: FC = () => {
           <Select
             labelId='products-categories-label'
             id='products-categories'
-            value={category}
+            value={_category}
             label='Category'
-            onChange={e => setCategory(e.target.value)}
+            onChange={e => _setCategory(e.target.value)}
             sx={styles.select}
           >
-            {categories.map((item, index) => (
+            {_categories.map((item, index) => (
               <MenuItem
                 key={index}
                 value={item._id}
@@ -141,8 +141,8 @@ const ProductsFormAdmin: FC = () => {
         <TextField
           type='number'
           label='Bar code'
-          value={barCode || ''}
-          onChange={e => setBarCode(Number(e.target.value))}
+          value={_barCode || ''}
+          onChange={e => _setBarCode(Number(e.target.value))}
           variant='standard'
           fullWidth
           required

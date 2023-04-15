@@ -11,17 +11,17 @@ import AdminModal from 'components/admin/AdminModal';
 const CheckoutProducts: FC = () => {
   const [_productsToList, _setProductToList] = useState<IProductCheckout[]>([]);
   const [_purchaseTotalPrice, _setPurchaseTotalPrice] = useState('');
-  const [openModal, setOpenModal] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalMsg, setModalMsg] = useState('');
+  const [_openModal, _setOpenModal] = useState(false);
+  const [_modalTitle, _setModalTitle] = useState('');
+  const [_modalMsg, _setModalMsg] = useState('');
 
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  const ssnRef = useRef<HTMLInputElement>(null);
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
+  const _ssnRef = useRef<HTMLInputElement>(null);
 
   const { id } = useParams();
 
-  const goToPayments = () => {
+  const _goToPayments = () => {
     const products = _productsToList.map(product => {
       return {
         "product": product.product?._id,
@@ -35,19 +35,19 @@ const CheckoutProducts: FC = () => {
       "totalPrice": _purchaseTotalPrice
     };
 
-    axiosPrivate.post<ICheckout>('v2/checkout/save-products', data)
+    _axiosPrivate.post<ICheckout>('v2/checkouts/save-products', data)
       .then(res => {
         const data = res.data;
-        navigate(`/admin/checkout/payment/${data._id}`);
+        _navigate(`/admin/checkout/payment/${data._id}`);
       })
       .catch(error => {
-        setOpenModal(true);
-        setModalTitle('Ops!');
+        _setOpenModal(true);
+        _setModalTitle('Ops!');
 
         if (error.response.status === 400) {
-          setModalMsg('Wrong data sent to the server. Please, contact the administrator');
+          _setModalMsg('Wrong data sent to the server. Please, contact the administrator');
         } else {
-          setModalMsg('Error while contacting the server');
+          _setModalMsg('Error while contacting the server');
         }
       });
   };
@@ -55,12 +55,12 @@ const CheckoutProducts: FC = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <AdminModal
-        open={openModal}
-        title={modalTitle}
-        focusAfter={ssnRef}
-        setOpen={setOpenModal} children={
+        open={_openModal}
+        title={_modalTitle}
+        focusAfter={_ssnRef}
+        setOpen={_setOpenModal} children={
           <Typography sx={{ mt: 2 }}>
-            {modalMsg}
+            {_modalMsg}
           </Typography>
         }
       />
@@ -72,7 +72,7 @@ const CheckoutProducts: FC = () => {
         productsToCheckout={_productsToList}
         purchaseTotalPrice={_purchaseTotalPrice}
         setPurchaseTotalPrice={_setPurchaseTotalPrice}
-        goToPayments={goToPayments}
+        goToPayments={_goToPayments}
       />
     </Box>
   );

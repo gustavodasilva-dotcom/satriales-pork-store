@@ -6,41 +6,41 @@ import AddressForm from 'components/admin/AddressForm';
 import { useNavigate, useParams } from 'react-router-dom';
 import { INaturalPerson } from 'interfaces/INaturalPerson';
 
-const URL = 'v2/person/natural';
+const URL = 'v2/persons/natural';
 
 const ClientsFormAdmin: FC = () => {
-  const [name, setName] = useState('');
-  const [ssn, setSsn] = useState('');
-  const [zipCode, setZipCode] = useState('');
-  const [street, setStreet] = useState('');
-  const [number, setNumber] = useState('');
-  const [complement, setComplement] = useState('');
-  const [brazilianAddress, setBrazilianAddress] = useState(false);
+  const [_name, _setName] = useState('');
+  const [_ssn, _setSsn] = useState('');
+  const [_zipCode, _setZipCode] = useState('');
+  const [_street, _setStreet] = useState('');
+  const [_number, _setNumber] = useState('');
+  const [_complement, _setComplement] = useState('');
+  const [_brazilianAddress, _setBrazilianAddress] = useState(false);
 
   const { id } = useParams();
 
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
 
-  const getProduct = () => {
-    axiosPrivate.get<INaturalPerson>(`${URL}/${id}`)
+  const _getProduct = () => {
+    _axiosPrivate.get<INaturalPerson>(`${URL}/${id}`)
       .then(res => {
         const data = res.data;
 
-        setName(data.name);
-        setSsn(data.ssn);
-        setZipCode(data.street.zipCode);
-        setStreet(data.street._id);
-        setNumber(data.number);
-        setComplement(data.complement);
-        setBrazilianAddress(data.street.isBrazilianAddress);
+        _setName(data.name);
+        _setSsn(data.ssn);
+        _setZipCode(data.street.zipCode);
+        _setStreet(data.street._id);
+        _setNumber(data.number);
+        _setComplement(data.complement);
+        _setBrazilianAddress(data.street.isBrazilianAddress);
       })
       .catch(err => {
         console.error(err);
       });
   };
 
-  const onSave = (e: React.FormEvent<HTMLFormElement>) => {
+  const _onSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let url = URL;
@@ -51,25 +51,25 @@ const ClientsFormAdmin: FC = () => {
       url += `/${id}`;
     }
 
-    axiosPrivate.request({
+    _axiosPrivate.request({
       url,
       method,
       data: {
-        name,
-        ssn,
-        number,
-        complement,
-        street
+        "name": _name,
+        "ssn": _ssn,
+        "number": _number,
+        "complement": _complement,
+        "street": _street
       }
     })
-      .then(() => navigate('/admin/clients'))
+      .then(() => _navigate('/admin/clients'))
       .catch(err => {
         console.error(err);
       });
   };
 
   useEffect(() => {
-    id && getProduct();
+    id && _getProduct();
   }, []);
 
   return (
@@ -78,13 +78,13 @@ const ClientsFormAdmin: FC = () => {
         <Box
           component='form'
           sx={styles.boxForm}
-          onSubmit={onSave}
+          onSubmit={_onSave}
         >
           <TextField
             label='Name'
             placeholder='Name'
-            value={name}
-            onChange={e => setName(e.target.value)}
+            value={_name}
+            onChange={e => _setName(e.target.value)}
             variant='outlined'
             fullWidth
             required
@@ -93,24 +93,24 @@ const ClientsFormAdmin: FC = () => {
           <TextField
             label='SSN'
             placeholder='ssn'
-            value={ssn}
-            onChange={e => setSsn(e.target.value)}
+            value={_ssn}
+            onChange={e => _setSsn(e.target.value)}
             variant='outlined'
             fullWidth
             required
             margin='dense'
           />
           <AddressForm
-            streetId={street}
-            setStreetId={setStreet}
-            zipCode={zipCode}
-            setZipCode={setZipCode}
-            number={number}
-            setNumber={setNumber}
-            complement={complement}
-            setComplement={setComplement}
-            brazilianAddress={brazilianAddress}
-            setBrazilianAddress={setBrazilianAddress}
+            streetId={_street}
+            setStreetId={_setStreet}
+            zipCode={_zipCode}
+            setZipCode={_setZipCode}
+            number={_number}
+            setNumber={_setNumber}
+            complement={_complement}
+            setComplement={_setComplement}
+            brazilianAddress={_brazilianAddress}
+            setBrazilianAddress={_setBrazilianAddress}
           />
           <Button
             type='submit'

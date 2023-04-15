@@ -8,25 +8,25 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 const URL = 'v2/productsCategories';
 
 const Categories: FC = () => {
-  const [categories, setCategories] = useState<IProductCategory[]>([]);
-  
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [_categories, _setCategories] = useState<IProductCategory[]>([]);
 
-  useEffect(() => {
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
+  const _location = useLocation();
+
+  const _loadCategories = () => {
     let isMounted = true;
     const controller = new AbortController();
 
     const getCategories = async () => {
       try {
-        const response = await axiosPrivate.get<IProductCategory[]>(URL, {
+        const response = await _axiosPrivate.get<IProductCategory[]>(URL, {
           signal: controller.signal
         });
-        isMounted && setCategories(response.data);
+        isMounted && _setCategories(response.data);
       } catch (error) {
         console.error(error);
-        navigate('/admin/login', { state: { from: location }, replace: true });
+        _navigate('/admin/login', { state: { from: _location }, replace: true });
       }
     };
 
@@ -36,17 +36,19 @@ const Categories: FC = () => {
       isMounted = false;
       controller.abort();
     };
-  }, []);
-  
-  const deleteCategory = (id: string) => {
-    axiosPrivate.delete(`${URL}/${id}`)
+  };
+
+  useEffect(_loadCategories, []);
+
+  const _deleteCategory = (id: string) => {
+    _axiosPrivate.delete(`${URL}/${id}`)
       .then(() => {
-        const otherCategories = categories.filter(category => category._id !== id);
-        setCategories([...otherCategories]);
+        const otherCategories = _categories.filter(category => category._id !== id);
+        _setCategories([...otherCategories]);
       })
       .catch(error => {
         console.error(error);
-        navigate('/admin/login', { state: { from: location }, replace: true });
+        _navigate('/admin/login', { state: { from: _location }, replace: true });
       })
   };
 
@@ -70,7 +72,7 @@ const Categories: FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {categories && categories.map((category, index) => (
+            {_categories && _categories.map((category, index) => (
               <TableRow key={index}>
                 <TableCell>
                   {category?.name}
@@ -81,7 +83,7 @@ const Categories: FC = () => {
                   </Link>
                   <DeleteForever
                     color='error'
-                    onClick={() => deleteCategory(category._id)}
+                    onClick={() => _deleteCategory(category._id)}
                   />
                 </TableCell>
               </TableRow>

@@ -5,28 +5,28 @@ import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { INaturalPerson } from 'interfaces/INaturalPerson';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const URL = 'v2/person/natural';
+const URL = 'v2/persons/natural';
 
 const ClientsAdmin: FC = () => {
-  const [clients, setClients] = useState<INaturalPerson[]>([]);
+  const [_clients, _setClients] = useState<INaturalPerson[]>([]);
 
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
+  const _location = useLocation();
 
-  useEffect(() => {
+  const _loadClients = () => {
     let isMounted = true;
     const controller = new AbortController();
 
     const getProducts = async () => {
       try {
-        const response = await axiosPrivate.get<INaturalPerson[]>(URL, {
+        const response = await _axiosPrivate.get<INaturalPerson[]>(URL, {
           signal: controller.signal
         });
-        isMounted && setClients(response.data);
+        isMounted && _setClients(response.data);
       } catch (error) {
         console.error(error);
-        navigate('/admin/login', { state: { from: location }, replace: true });
+        _navigate('/admin/login', { state: { from: _location }, replace: true });
       }
     };
 
@@ -36,17 +36,19 @@ const ClientsAdmin: FC = () => {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  };
 
-  const deleteClient = (id: string) => {
-    axiosPrivate.delete(`${URL}/${id}`)
+  useEffect(_loadClients, []);
+
+  const _deleteClient = (id: string) => {
+    _axiosPrivate.delete(`${URL}/${id}`)
       .then(() => {
-        const otherClients = clients.filter(client => client._id !== id);
-        setClients([...otherClients]);
+        const otherClients = _clients.filter(client => client._id !== id);
+        _setClients([...otherClients]);
       })
       .catch(error => {
         console.error(error);
-        navigate('/admin/login', { state: { from: location }, replace: true });
+        _navigate('/admin/login', { state: { from: _location }, replace: true });
       });
   };
 
@@ -73,7 +75,7 @@ const ClientsAdmin: FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {clients && clients.map((client, index) => (
+            {_clients && _clients.map((client, index) => (
               <TableRow key={index}>
                 <TableCell>
                   {client?.name}
@@ -87,7 +89,7 @@ const ClientsAdmin: FC = () => {
                   </Link>
                   <DeleteForever
                     color='error'
-                    onClick={() => deleteClient(client._id)}
+                    onClick={() => _deleteClient(client._id)}
                   />
                 </TableCell>
               </TableRow>

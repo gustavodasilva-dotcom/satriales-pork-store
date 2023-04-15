@@ -4,31 +4,31 @@ import { IUser } from 'interfaces/IUser';
 import { styles } from './styles';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 
-const URL = 'v2/personalInfo';
+const URL = 'v2/personalInfos';
 
 const PersonalInfo: FC = () => {
-  const [name, setName] = useState<string | undefined>('');
-  const [email, setEmail] = useState('');
+  const [_name, _setName] = useState<string | undefined>('');
+  const [_email, _setEmail] = useState('');
 
-  const axiosPrivate = useAxiosPrivate();
+  const _axiosPrivate = useAxiosPrivate();
 
-  const getPersonalInfo = () => {
-    axiosPrivate.get<IUser>(URL)
+  const _getPersonalInfo = () => {
+    _axiosPrivate.get<IUser>(URL)
       .then(res => {
-        setName(res.data?.name);
-        setEmail(res.data.email);
+        _setName(res.data?.name);
+        _setEmail(res.data.email);
       })
       .catch(err => {
         console.error(err);
       });
   };
 
-  const onSave = (e: React.FormEvent<HTMLFormElement>) => {
+  const _onSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    axiosPrivate.put(URL, {
-      name,
-      email
+    _axiosPrivate.put(URL, {
+      "name": _name,
+      "email": _email
     })
       .then(() => {
         alert('Ok');
@@ -38,18 +38,18 @@ const PersonalInfo: FC = () => {
       });
   };
 
-  useEffect(getPersonalInfo, []);
+  useEffect(_getPersonalInfo, []);
 
   return (
     <Box>
       <Box
         component='form'
-        onSubmit={onSave}
+        onSubmit={_onSave}
       >
         <TextField
           label='Name'
-          value={name}
-          onChange={e => setName(e.target.value)}
+          value={_name}
+          onChange={e => _setName(e.target.value)}
           variant='standard'
           fullWidth
           margin='dense'
@@ -57,8 +57,8 @@ const PersonalInfo: FC = () => {
         <TextField
           type='email'
           label='Email'
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          value={_email}
+          onChange={e => _setEmail(e.target.value)}
           variant='standard'
           fullWidth
           required

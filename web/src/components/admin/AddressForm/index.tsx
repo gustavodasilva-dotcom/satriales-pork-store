@@ -16,56 +16,56 @@ const AddressForm: FC<IAddressProps> = ({
   brazilianAddress,
   setBrazilianAddress
 }) => {
-  const [name, setName] = useState('');
-  const [neighborhood, setNeighborhood] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [country, setCountry] = useState('');
+  const [_name, _setName] = useState('');
+  const [_neighborhood, _setNeighborhood] = useState('');
+  const [_city, _setCity] = useState('');
+  const [_state, _setState] = useState('');
+  const [_country, _setCountry] = useState('');
 
-  const cleanFiels = (cleanZipCode: boolean = false) => {
+  const _cleanFiels = (cleanZipCode: boolean = false) => {
     if (cleanZipCode) {
       setZipCode('');
     }
 
     setStreetId('');
-    setName('');
+    _setName('');
     setNumber('');
     setComplement('');
-    setNeighborhood('');
-    setCity('');
-    setState('');
-    setCountry('');
+    _setNeighborhood('');
+    _setCity('');
+    _setState('');
+    _setCountry('');
   };
 
-  const getAddressByZipCode = () => {
+  const _getAddressByZipCode = () => {
     if (zipCode.length !== 8) {
-      cleanFiels();
+      _cleanFiels();
       return;
     }
 
-    axios.get<IAddress>(`v1/address/zipcode/${zipCode}`)
+    axios.get<IAddress>(`v1/addresses/zipcode/${zipCode}`)
       .then(res => {
         const data = res.data;
 
         setBrazilianAddress(data.isBrazilianAddress);
         setStreetId(data._id);
         setZipCode(data.zipCode);
-        setName(data.name);
-        setNeighborhood(data.neighborhood.name);
-        setCity(data.city.name);
-        setState(data.state.initials);
-        setCountry(data.country.name);
+        _setName(data.name);
+        _setNeighborhood(data.neighborhood.name);
+        _setCity(data.city.name);
+        _setState(data.state.initials);
+        _setCountry(data.country.name);
       })
       .catch(err => console.error(err));
   };
 
-  const handleBrazilianAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const _handleBrazilianAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBrazilianAddress(e.target.checked);
-    cleanFiels(true);
+    _cleanFiels(true);
   };
 
   useEffect(() => {
-    brazilianAddress && getAddressByZipCode();
+    brazilianAddress && _getAddressByZipCode();
   }, [zipCode]);
 
   return (
@@ -75,7 +75,7 @@ const AddressForm: FC<IAddressProps> = ({
           control={
             <Checkbox
               checked={brazilianAddress}
-              onChange={handleBrazilianAddress}
+              onChange={_handleBrazilianAddress}
             />
           }
           label='Brazilian address'
@@ -99,8 +99,8 @@ const AddressForm: FC<IAddressProps> = ({
         <TextField
           label='Name'
           placeholder='Name'
-          value={name}
-          onChange={e => setName(e.target.value)}
+          value={_name}
+          onChange={e => _setName(e.target.value)}
           variant='outlined'
           fullWidth
           required
@@ -129,8 +129,8 @@ const AddressForm: FC<IAddressProps> = ({
         <TextField
           label='Neighborhood'
           placeholder='Neighborhood'
-          value={neighborhood}
-          onChange={e => setNeighborhood(e.target.value)}
+          value={_neighborhood}
+          onChange={e => _setNeighborhood(e.target.value)}
           variant='outlined'
           fullWidth
           required
@@ -140,8 +140,8 @@ const AddressForm: FC<IAddressProps> = ({
         <TextField
           label='City'
           placeholder='City'
-          value={city}
-          onChange={e => setCity(e.target.value)}
+          value={_city}
+          onChange={e => _setCity(e.target.value)}
           variant='outlined'
           fullWidth
           required
@@ -151,8 +151,8 @@ const AddressForm: FC<IAddressProps> = ({
         <TextField
           label='State'
           placeholder='State'
-          value={state}
-          onChange={e => setState(e.target.value)}
+          value={_state}
+          onChange={e => _setState(e.target.value)}
           variant='outlined'
           fullWidth
           required
@@ -162,8 +162,8 @@ const AddressForm: FC<IAddressProps> = ({
         <TextField
           label='Country'
           placeholder='Country'
-          value={country}
-          onChange={e => setCountry(e.target.value)}
+          value={_country}
+          onChange={e => _setCountry(e.target.value)}
           variant='outlined'
           fullWidth
           required

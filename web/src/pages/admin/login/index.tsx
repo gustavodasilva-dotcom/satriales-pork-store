@@ -7,18 +7,18 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const LoginAdmin: FC = () => {
   const { setAuth } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/admin/home";
+  const [_email, _setEmail] = useState('');
+  const [_password, _setPassword] = useState('');
+  const _navigate = useNavigate();
+  const _location = useLocation();
+  const _from = _location.state?.from?.pathname || "/admin/home";
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     axios.post('v1/auth', {
-      email,
-      password
+      "email": _email,
+      "password": _password
     }, {
       headers: { 'Context-Type': 'application/json' },
       withCredentials: true
@@ -26,7 +26,7 @@ const LoginAdmin: FC = () => {
       .then(res => {
         const accessToken = res?.data?.accessToken;
         setAuth(accessToken);
-        navigate(from, { replace: true });
+        _navigate(_from, { replace: true });
       })
       .catch(err => {
         if (!err?.response) {
@@ -50,8 +50,8 @@ const LoginAdmin: FC = () => {
           <Box component='form' onSubmit={submit} sx={styles.boxForm}>
             <TextField
               label='Email'
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+              value={_email}
+              onChange={e => _setEmail(e.target.value)}
               sx={styles.textField}
               variant='standard'
               fullWidth
@@ -60,8 +60,8 @@ const LoginAdmin: FC = () => {
             <TextField
               type='password'
               label='Password'
-              value={password}
-              onChange={e => setPassword(e.target.value)}
+              value={_password}
+              onChange={e => _setPassword(e.target.value)}
               sx={styles.textField}
               variant='standard'
               fullWidth

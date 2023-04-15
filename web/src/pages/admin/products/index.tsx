@@ -8,25 +8,25 @@ import { Edit, DeleteForever } from '@mui/icons-material';
 const URL = 'v2/products';
 
 const ProductsAdmin: FC = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
-  
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [_products, _setProducts] = useState<IProduct[]>([]);
 
-  useEffect(() => {
+  const _axiosPrivate = useAxiosPrivate();
+  const _navigate = useNavigate();
+  const _location = useLocation();
+
+  const _loadProducts = () => {
     let isMounted = true;
     const controller = new AbortController();
 
     const getProducts = async () => {
       try {
-        const response = await axiosPrivate.get<IProduct[]>(URL, {
+        const response = await _axiosPrivate.get<IProduct[]>(URL, {
           signal: controller.signal
         });
-        isMounted && setProducts(response.data);
+        isMounted && _setProducts(response.data);
       } catch (error) {
         console.error(error);
-        navigate('/admin/login', { state: { from: location }, replace: true });
+        _navigate('/admin/login', { state: { from: _location }, replace: true });
       }
     };
 
@@ -36,17 +36,19 @@ const ProductsAdmin: FC = () => {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  };
+
+  useEffect(_loadProducts, []);
 
   const deleteProduct = (id: string) => {
-    axiosPrivate.delete(`${URL}/${id}`)
+    _axiosPrivate.delete(`${URL}/${id}`)
       .then(() => {
-        const otherProducts = products.filter(product => product._id !== id);
-        setProducts([...otherProducts]);
+        const otherProducts = _products.filter(product => product._id !== id);
+        _setProducts([...otherProducts]);
       })
       .catch(error => {
         console.error(error);
-        navigate('/admin/login', { state: { from: location }, replace: true });
+        _navigate('/admin/login', { state: { from: _location }, replace: true });
       });
   };
 
@@ -73,7 +75,7 @@ const ProductsAdmin: FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products && products.map((product, index) => (
+            {_products && _products.map((product, index) => (
               <TableRow key={index}>
                 <TableCell>
                   {product?.name}
