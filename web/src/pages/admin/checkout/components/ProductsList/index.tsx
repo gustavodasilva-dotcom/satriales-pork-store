@@ -3,6 +3,7 @@ import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, T
 import { DeleteForever, Edit } from '@mui/icons-material';
 import { IProductListProps } from './types';
 import { IProductCheckout } from 'interfaces/IProductCheckout';
+import CalculateProductPrice from 'utils/CalculateProductPrice';
 
 const ProductsList: FC<IProductListProps> = ({
   productsToCheckout,
@@ -12,21 +13,13 @@ const ProductsList: FC<IProductListProps> = ({
 }) => {
   const [_ableGoToPayment, _setAbleGoToPayment] = useState(true);
 
-  const _calcProductPrice = (checkoutItem: IProductCheckout): Number => {
-    const productPrice = checkoutItem.product?.price.$numberDecimal!;
-    const productQuantity = checkoutItem.quantity;
-    const price = Number(productPrice).valueOf() * productQuantity.valueOf();
-
-    return price;
-  };
-
   const _sumPurchaseTotalPrice = () => {
     const sumProductPrices = (accumulator: Number, a: Number): Number => {
       return accumulator.valueOf() + a.valueOf();
     };
 
     const calcProductPrices = productsToCheckout.map(item => {
-      return _calcProductPrice(item);
+      return CalculateProductPrice(item.product, item.quantity);
     });
 
     const productPricesSum = calcProductPrices.reduce(sumProductPrices, 0);
@@ -101,7 +94,7 @@ const ProductsList: FC<IProductListProps> = ({
                   {item.quantity.toString()}
                 </TableCell>
                 <TableCell>
-                  $ {_calcProductPrice(item).toFixed(2)}
+                  $ {CalculateProductPrice(item.product, item.quantity).toFixed(2)}
                 </TableCell>
                 <TableCell>
                   <IconButton>

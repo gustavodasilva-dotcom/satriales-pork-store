@@ -12,7 +12,7 @@ const handleGetCheckout = async (req, res) => {
     const checkout = await Checkout.findById(id).populate('client');
     if (!checkout) return res.sendStatus(404);
 
-    const products = await ProductCheckout.find({ checkout: id });
+    const products = await ProductCheckout.find({ checkout: id }).populate('product');
 
     return res.json({
       ...checkout._doc,

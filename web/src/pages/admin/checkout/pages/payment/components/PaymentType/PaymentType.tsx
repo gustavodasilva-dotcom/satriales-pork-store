@@ -5,11 +5,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { IPaymentTypes } from "interfaces/IPaymentTypes";
 import { IPaymentTypeProps } from "./types";
 
-const PaymentType: FC<IPaymentTypeProps> = ({ checkout }) => {
+const PaymentType: FC<IPaymentTypeProps> = ({
+  checkout,
+  selectedPaymentType,
+  setSelectedPaymentType
+}) => {
   const _checkoutData = checkout;
 
   const [_paymentTypes, _setPaymentTypes] = useState<IPaymentTypes[]>([]);
-  const [_selectedPaymentType, _setSelectedPaymentType] = useState('');
 
   const _axiosPrivate = useAxiosPrivate();
   const _navigate = useNavigate();
@@ -52,9 +55,9 @@ const PaymentType: FC<IPaymentTypeProps> = ({ checkout }) => {
         <Select
           labelId='payment-types-label'
           id='payment-types'
-          value={_selectedPaymentType}
+          value={selectedPaymentType}
           label='Select a payment type'
-          onChange={e => _setSelectedPaymentType(e.target.value)}
+          onChange={e => setSelectedPaymentType(e.target.value)}
           required
         >
           {_paymentTypes.map((item, index) => (
@@ -68,7 +71,8 @@ const PaymentType: FC<IPaymentTypeProps> = ({ checkout }) => {
         </Select>
       </FormControl>
       <TextField
-        value={_checkoutData?.totalPrice.toFixed(2)}
+        value={'$ ' + _checkoutData?.totalPrice.toFixed(2) ?? ''}
+        label='Total price'
         sx={{ mt: 2 }}
         disabled
       />
