@@ -1,0 +1,21 @@
+@import 'styles/Theme.style.scss';
+
+.Login {
+
+  .link-container {
+    margin-top: 20px;
+
+    a {
+      color: $rich-black;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        color: $rust;
+      }
+    }
+  }
+}

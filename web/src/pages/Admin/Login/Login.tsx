@@ -1,9 +1,11 @@
 import { FC, useState } from 'react';
 import { Box, Button, Container, Paper, TextField } from '@mui/material';
-import { styles } from './styles';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'api/axios';
 import useAuth from 'hooks/useAuth';
-import { useNavigate, useLocation } from 'react-router-dom';
+import satrialesLogo from 'assets/logo.png';
+import { styles } from './styles';
+import './Login.style.scss';
 
 const LoginAdmin: FC = () => {
   const { setAuth } = useAuth();
@@ -44,9 +46,15 @@ const LoginAdmin: FC = () => {
   };
 
   return (
-    <Container sx={styles.container}>
+    <Container className='Login' sx={styles.container}>
       <Box sx={styles.defaultBox}>
         <Paper sx={styles.paper}>
+          <Box sx={styles.logo}>
+            <img
+              src={satrialesLogo}
+              alt="Logo"
+            />
+          </Box>
           <Box component='form' onSubmit={submit} sx={styles.boxForm}>
             <TextField
               label='Email'
@@ -77,6 +85,13 @@ const LoginAdmin: FC = () => {
             </Button>
           </Box>
         </Paper>
+        <div>
+          <Box className='link-container'>
+            <Link to='/'>
+              Go to Satriale's
+            </Link>
+          </Box>
+        </div>
       </Box>
     </Container>
   );

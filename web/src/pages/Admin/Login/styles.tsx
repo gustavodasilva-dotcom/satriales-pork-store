@@ -1,9 +1,15 @@
 export const styles = {
   container: {
     display: 'flex',
-    height: '100vh',
+    height: '70vh',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  logo: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: '10px'
   },
   defaultBox: {
     width: '355px',
@@ -21,5 +27,14 @@ export const styles = {
   },
   button: {
     marginTop: '20px'
+  },
+  linkContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textTransform: 'none'
+  },
+  link: {
+    textTransform: 'none'
   }
 };
