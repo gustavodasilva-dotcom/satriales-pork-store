@@ -1,5 +1,87 @@
 @import 'styles/Theme.style.scss';
 
 .AboutUs {
-  
+  margin: 0 auto;
+  width: 70%;
+  color: $charcoal-gray;
+
+  .title {
+    margin-top: 40px;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 5rem;
+      height: 0.5rem;
+      background-color: $rust;
+      margin: 0 auto;
+      position: absolute;
+      border-radius: 20px;
+    }
+  }
+
+  .content {
+    margin-top: 40px;
+    width: 100%;
+  }
+
+  .description {
+    font-size: 20px;
+    color: $charcoal-gray;
+    margin-bottom: 30px;
+  }
+
+  .visual-aids {
+    display: flex;
+
+    @media (max-width: $mobile) {
+      display: grid;
+    }
+  }
+
+  .image-container,
+  .location-container {
+    width: 50%;
+    margin-right: 30px;
+
+    @media (max-width: $mobile) {
+      width: 100%;
+    }
+  }
+
+  .address-info {
+    margin-bottom: 25px;
+
+    @media (max-width: $mobile) {
+      margin-top: 25px;
+    }
+  }
+
+  .street-name {
+    font-size: 25px;
+    font-weight: 600;
+  }
+
+  .city-country {
+    font-size: 20px;
+  }
+
+  .image-container {
+
+    img {
+      width: 650px;
+
+      @media (max-width: $mobile) {
+        width: 260px;
+      }
+    }
+  }
+
+  .google-map {
+
+    iframe {
+      width: 100%;
+      height: 358px;
+    }
+  }
 }
