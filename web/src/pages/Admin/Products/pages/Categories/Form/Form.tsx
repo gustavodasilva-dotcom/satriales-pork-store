@@ -5,7 +5,7 @@ import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IProductCategory } from 'interfaces/IProductCategory';
 
-const URL = 'v2/productsCategories';
+const URL = 'v2/products-categories';
 
 const ProductsFormAdmin: FC = () => {
   const [_name, _setName] = useState('');

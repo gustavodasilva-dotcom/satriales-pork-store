@@ -33,11 +33,13 @@ app.use('/api/v1/auth', require('./routes/v1/auth'));
 app.use('/api/v1/refresh', require('./routes/v1/refresh'));
 app.use('/api/v1/logout', require('./routes/v1/logout'));
 app.use('/api/v1/addresses', require('./routes/v1/address'));
+app.use('/api/v1/products', require('./routes/v1/products'));
+app.use('/api/v1/products-categories', require('./routes/v1/productsCategories'));
 
-app.use('/api/v2/personalInfos', require('./routes/v2/personalInfo'));
+app.use('/api/v2/personal-infos', require('./routes/v2/personalInfo'));
 app.use(verifyJwt);
 app.use('/api/v2/products', require('./routes/v2/products'));
-app.use('/api/v2/productsCategories', require('./routes/v2/productsCategories'));
+app.use('/api/v2/products-categories', require('./routes/v2/productsCategories'));
 app.use('/api/v2/persons', require('./routes/v2/person'));
 app.use('/api/v2/payments', require('./routes/v2/payment'));
 app.use('/api/v2/checkouts', require('./routes/v2/checkout'));

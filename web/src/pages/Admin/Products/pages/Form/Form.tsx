@@ -36,7 +36,7 @@ const ProductsFormAdmin: FC = () => {
   };
 
   const _getCategories = () => {
-    _axiosPrivate.get<IProduct[]>('v2/productsCategories')
+    _axiosPrivate.get<IProduct[]>('v2/products-categories')
       .then(res => {
         _setCategories(res.data);
       })

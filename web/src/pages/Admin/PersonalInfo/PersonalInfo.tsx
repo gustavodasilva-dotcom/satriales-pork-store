@@ -4,7 +4,7 @@ import { IUser } from 'interfaces/IUser';
 import { styles } from './styles';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 
-const URL = 'v2/personalInfos';
+const URL = 'v2/personal-infos';
 
 const PersonalInfo: FC = () => {
   const [_name, _setName] = useState<string | undefined>('');

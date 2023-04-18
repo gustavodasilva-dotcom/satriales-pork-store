@@ -5,7 +5,7 @@ import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { IProductCategory } from 'interfaces/IProductCategory';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-const URL = 'v2/productsCategories';
+const URL = 'v2/products-categories';
 
 const Categories: FC = () => {
   const [_categories, _setCategories] = useState<IProductCategory[]>([]);
