@@ -1,5 +1,27 @@
 @import 'styles/Theme.style.scss';
 
 .Products {
-  
+  margin: 0 auto;
+  width: 70%;
+  color: $charcoal-gray;
+  margin-bottom: 50px;
+
+  .card-container {
+    margin-top: 40px;
+  }
+
+  .card-title::after {
+    content: '';
+    display: block;
+    width: 5rem;
+    height: 0.5rem;
+    background-color: $rust;
+    margin: 0 auto;
+    position: absolute;
+    border-radius: 20px;
+  }
+
+  .card-carousel {
+    margin-bottom: 60px;
+  }
 }
