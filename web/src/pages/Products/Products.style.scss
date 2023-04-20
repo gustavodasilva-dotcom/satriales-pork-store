@@ -3,6 +3,7 @@
 .Products {
   margin: 0 auto;
   width: 70%;
+  max-width: 1200px;
   color: $charcoal-gray;
   margin-bottom: 50px;
 
@@ -19,9 +20,5 @@
     margin: 0 auto;
     position: absolute;
     border-radius: 20px;
-  }
-
-  .card-carousel {
-    margin-bottom: 60px;
   }
 }

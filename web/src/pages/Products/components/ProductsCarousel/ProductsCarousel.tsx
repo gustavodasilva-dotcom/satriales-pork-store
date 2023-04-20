@@ -1,13 +1,25 @@
-import { FC } from 'react';
+import { useRef } from 'react';
+import { motion } from 'framer-motion';
 
-import './ProductsCarousel.style.scss';
+import CarouselItem from './CarouselItem';
+
 import { IProductsCarouselProps } from './ProductsCarousel.types';
+import './ProductsCarousel.scss';
 
-const ProductsCarousel: FC<IProductsCarouselProps> = ({ category }) => {
+const ProductsCarousel: React.FC<IProductsCarouselProps> = ({ category }) => {
+  const _carouselRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div className='ProductsCarousel'>
-      
-    </div>
+    <motion.div
+      className='CardCarousel'
+      ref={_carouselRef}
+      whileTap={{ cursor: 'grabbing' }}
+    >
+      <CarouselItem
+        category={category}
+        carouselRef={_carouselRef}
+      />
+    </motion.div>
   );
 };
 

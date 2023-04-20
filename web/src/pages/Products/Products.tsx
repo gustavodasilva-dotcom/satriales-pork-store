@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-
 import axios from 'api/axios';
 
 import { IProductCategory } from 'interfaces/IProductCategory';
@@ -33,9 +32,9 @@ const Products: FC = () => {
           <h1 className='card-title'>
             {category.name}
           </h1>
-          <div className='card-carousel'>
-            <ProductsCarousel category={category} />
-          </div>
+          <ProductsCarousel
+            category={category}
+          /> 
         </div>
       ))}
     </div>
