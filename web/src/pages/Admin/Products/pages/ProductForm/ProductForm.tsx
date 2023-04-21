@@ -7,16 +7,18 @@ import { plainModal } from 'utils/Modals';
 
 import { IProduct } from 'interfaces/IProduct';
 import { IProductCategory } from 'interfaces/IProductCategory';
-import { styles } from './styles';
+import './ProductForm.scss';
+import UploadPictures from './components/UploadPictures/UploadPictures';
 
 const URL = 'v2/products';
 
-const ProductsFormAdmin: FC = () => {
+const ProductForm: FC = () => {
   const [_name, _setName] = useState('');
   const [_description, _setDescription] = useState('');
   const [_price, _setPrice] = useState('');
   const [_category, _setCategory] = useState('');
   const [_barCode, _setBarCode] = useState<Number>();
+  const [_image, _setImage] = useState<File | null>(null);
   const [_categories, _setCategories] = useState<IProductCategory[]>([]);
 
   const { id } = useParams();
@@ -102,10 +104,10 @@ const ProductsFormAdmin: FC = () => {
   }, []);
 
   return (
-    <Box sx={styles.boxContainer}>
+    <Box className='ProductForm'>
       <Box
         component='form'
-        sx={styles.boxForm}
+        className='form-wrapper'
         onSubmit={_onSave}
       >
         <TextField
@@ -135,11 +137,11 @@ const ProductsFormAdmin: FC = () => {
           required
           margin='dense'
         />
-        <FormControl fullWidth>
-          <InputLabel
-            id='products-categories-label'
-            sx={styles.select}
-          >
+        <FormControl
+          fullWidth
+          className='select-container'
+        >
+          <InputLabel id='products-categories-label'>
             Category
           </InputLabel>
           <Select
@@ -148,7 +150,6 @@ const ProductsFormAdmin: FC = () => {
             value={_category}
             label='Category'
             onChange={e => _setCategory(e.target.value)}
-            sx={styles.select}
           >
             {_categories.map((item, index) => (
               <MenuItem
@@ -170,10 +171,11 @@ const ProductsFormAdmin: FC = () => {
           required
           margin='dense'
         />
+        <UploadPictures />
         <Button
           type='submit'
           variant='contained'
-          sx={styles.button}
+          className='button-container'
           fullWidth
         >
           Save
@@ -183,4 +185,4 @@ const ProductsFormAdmin: FC = () => {
   );
 };
 
-export default ProductsFormAdmin;
+export default ProductForm;
