@@ -1,11 +1,20 @@
 import { FC } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa'
+import { FaUserCircle } from 'react-icons/fa';
+
+import { plainModal } from 'utils/Modals';
 
 import satrialesLogo from 'assets/logo.png';
 import './Toolbar.style.scss';
 
 const Toolbar: FC = () => {
+  const _handleUserInfo = () => {
+    plainModal({
+      type: 'warning',
+      message: 'This function is not available right now!'
+    });
+  };
+
   return (
     <div className='Toolbar'>
       <nav className='nav-container'>
@@ -51,7 +60,7 @@ const Toolbar: FC = () => {
           </ul>
         </div>
         <div className='col-right'>
-          <FaUserCircle />
+          <FaUserCircle onClick={_handleUserInfo} />
         </div>
       </nav>
       <div className='outlet-container'>

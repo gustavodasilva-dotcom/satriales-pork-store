@@ -1,9 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import { DeleteForever, Edit } from '@mui/icons-material';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { INaturalPerson } from 'interfaces/INaturalPerson';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
+
+import { INaturalPerson } from 'interfaces/INaturalPerson';
+import { plainModal } from 'utils/Modals';
 
 const URL = 'v2/persons/natural';
 
@@ -24,9 +27,24 @@ const ClientsAdmin: FC = () => {
           signal: controller.signal
         });
         isMounted && _setClients(response.data);
-      } catch (error) {
-        console.error(error);
-        _navigate('/admin/login', { state: { from: _location }, replace: true });
+      } catch (error: any) {
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else {
+          message = 'Failed to get clients';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       }
     };
 
@@ -47,8 +65,25 @@ const ClientsAdmin: FC = () => {
         _setClients([...otherClients]);
       })
       .catch(error => {
-        console.error(error);
-        _navigate('/admin/login', { state: { from: _location }, replace: true });
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else if (error?.response?.status === 404) {
+          message = 'Client not found';
+        } else {
+          message = 'Failed to get clients';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 

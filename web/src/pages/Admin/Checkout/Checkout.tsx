@@ -1,18 +1,17 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, IconButton, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, IconButton, Paper, TextField } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Search } from '@mui/icons-material';
-import AdminModal from 'components/Admin/AdminModal';
+
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { useNavigate } from 'react-router-dom';
+
 import { INaturalPerson } from 'interfaces/INaturalPerson';
 import { ICheckout } from 'interfaces/ICheckout';
+import { plainModal } from 'utils/Modals';
 
 const Checkout: FC = () => {
   const [_clientSsn, _setClientSsn] = useState('');
   const [_clientSearched, _setClientSearched] = useState<INaturalPerson>();
-  const [_openModal, _setOpenModal] = useState(false);
-  const [_modalTitle, _setModalTitle] = useState('');
-  const [_modalMsg, _setModalMsg] = useState('');
   const [_useClient, _setUseClient] = useState(false);
   const [_disableContinueButton, _setDisableContinueButton] = useState(true);
 
@@ -20,6 +19,7 @@ const Checkout: FC = () => {
 
   const _axiosPrivate = useAxiosPrivate();
   const _navigate = useNavigate();
+  const _location = useLocation();
 
   const _handleUseClient = (e: React.ChangeEvent<HTMLInputElement>) => {
     _setUseClient(e.target.checked);
@@ -55,14 +55,25 @@ const Checkout: FC = () => {
           _setClientSearched(data);
         })
         .catch(error => {
-          _setOpenModal(true);
-          _setModalTitle('Ops!');
+          let message: string;
 
-          if (error.response.status === 404) {
-            _setModalMsg('Client not found');
+          if (!error?.response) {
+            message = 'No response from the server';
+          } else if (error?.response?.status === 401) {
+            message = 'Unauthorized';
+          } else if (error?.response?.status === 403) {
+            _navigate('/admin/login', { state: { from: _location }, replace: true });
+            return;
+          } else if (error?.response?.status === 404) {
+            message = 'Client not found';
           } else {
-            _setModalMsg('Error while contacting the server');
+            message = 'Error while contacting the server';
           }
+
+          plainModal({
+            type: 'error',
+            message
+          });
         });
     }
   };
@@ -79,14 +90,25 @@ const Checkout: FC = () => {
         _navigate(`products/${data._id}`);
       })
       .catch(error => {
-        _setOpenModal(true);
-        _setModalTitle('Ops!');
+        let message: string;
 
-        if (error.response.status === 400) {
-          _setModalMsg('Wrong data sent to the server. Please, contact your administrator');
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 400) {
+          message = 'Wrong data sent to the server. Please, contact your administrator';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
         } else {
-          _setModalMsg('Error while contacting the server');
+          message = 'Error while contacting the server';
         }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 
@@ -100,16 +122,6 @@ const Checkout: FC = () => {
 
   return (
     <Box>
-      <AdminModal
-        open={_openModal}
-        title={_modalTitle}
-        focusAfter={_ssnRef}
-        setOpen={_setOpenModal} children={
-          <Typography sx={{ mt: 2 }}>
-            {_modalMsg}
-          </Typography>
-        }
-      />
       <TextField
         type='number'
         sx={{ width: 500 }}

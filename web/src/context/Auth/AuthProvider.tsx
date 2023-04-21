@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react';
-import { IAuthContextProps, IAuthProviderProps } from './types';
+import { IAuthContextProps, IAuthProviderProps } from './AuthProvider.types';
 
 const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);
 

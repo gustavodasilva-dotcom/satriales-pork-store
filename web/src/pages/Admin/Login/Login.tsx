@@ -1,11 +1,14 @@
 import { FC, useState } from 'react';
 import { Box, Button, Container, Paper, TextField } from '@mui/material';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+
 import axios from 'api/axios';
 import useAuth from 'hooks/useAuth';
+
 import satrialesLogo from 'assets/logo.png';
 import { styles } from './styles';
 import './Login.style.scss';
+import { plainModal } from 'utils/Modals';
 
 const LoginAdmin: FC = () => {
   const { setAuth } = useAuth();
@@ -31,17 +34,24 @@ const LoginAdmin: FC = () => {
         _navigate(_from, { replace: true });
       })
       .catch(err => {
+        let message: string;
+
         if (!err?.response) {
-          alert('No response from the server');
+          message = 'No response from the server';
         } else if (err.response?.status === 400) {
-          alert('Email and password are required');
+          message = 'Email and password are required';
         } else if (err.response?.status === 401) {
-          alert('Unauthorized');
+          message = 'Unauthorized';
         } else if (err.response?.status === 404) {
-          alert('User not found');
+          message = 'User not found';
         } else {
-          alert('The login process failed');
+          message = 'The login process failed';
         }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 

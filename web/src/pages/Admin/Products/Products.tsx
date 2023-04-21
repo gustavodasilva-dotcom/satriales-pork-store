@@ -4,6 +4,7 @@ import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { IProduct } from 'interfaces/IProduct';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Edit, DeleteForever } from '@mui/icons-material';
+import { plainModal } from 'utils/Modals';
 
 const URL = 'v2/products';
 
@@ -24,9 +25,24 @@ const ProductsAdmin: FC = () => {
           signal: controller.signal
         });
         isMounted && _setProducts(response.data);
-      } catch (error) {
-        console.error(error);
-        _navigate('/admin/login', { state: { from: _location }, replace: true });
+      } catch (error: any) {
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else {
+          message = 'Failed to get products';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       }
     };
 
@@ -47,8 +63,25 @@ const ProductsAdmin: FC = () => {
         _setProducts([...otherProducts]);
       })
       .catch(error => {
-        console.error(error);
-        _navigate('/admin/login', { state: { from: _location }, replace: true });
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else if (error?.response?.status === 404) {
+          message = 'Product not found';
+        } else {
+          message = 'Failed to get products';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 

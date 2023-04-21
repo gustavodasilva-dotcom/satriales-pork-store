@@ -1,10 +1,12 @@
-import { FC, useEffect, useRef, useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
+import { Box, Button } from '@mui/material';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import PaymentType from './components/PaymentType/PaymentType';
 import ProductsList from './components/ProductsList/ProductsList';
-import AdminModal from 'components/Admin/AdminModal';
+import { plainModal } from 'utils/Modals';
+
 import { ICheckout } from 'interfaces/ICheckout';
 import { ReactComponent as SvgSuccessfulPurchase } from 'assets/svgs/undrawSuccessfulPurchase.svg';
 
@@ -13,16 +15,11 @@ const CheckoutPayment: FC = () => {
   const [_selectedPaymentType, _setSelectedPaymentType] = useState('');
   const [_checkoutCompleted, _setCheckoutCompleted] = useState(false);
 
-  const [_openModal, _setOpenModal] = useState(false);
-  const [_modalTitle, _setModalTitle] = useState('');
-  const [_modalMsg, _setModalMsg] = useState('');
-
   const { id } = useParams();
 
   const _axiosPrivate = useAxiosPrivate();
   const _navigate = useNavigate();
   const _location = useLocation();
-  const _ssnRef = useRef<HTMLInputElement>(null);
 
   const _loadCheckout = () => {
     let isMounted = true;
@@ -34,9 +31,24 @@ const CheckoutPayment: FC = () => {
           signal: controller.signal
         });
         isMounted && _setCheckout(response.data);
-      } catch (error) {
-        console.error(error);
-        _navigate('/admin/login', { state: { from: _location }, replace: true });
+      } catch (error: any) {
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else {
+          message = 'Failed to get checkout';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       }
     };
 
@@ -61,29 +73,30 @@ const CheckoutPayment: FC = () => {
         _setCheckoutCompleted(true);
       })
       .catch(error => {
-        _setOpenModal(true);
-        _setModalTitle('Ops!');
+        let message: string;
 
-        if (error.response.status === 400) {
-          _setModalMsg('Wrong data sent to the server. Please, contact the administrator');
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 400) {
+          message = 'Wrong data sent to the server. Please, contact the administrator';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
         } else {
-          _setModalMsg('Error while contacting the server');
+          message = 'Error while contacting the server';
         }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 
   return (
     <div>
-      <AdminModal
-        open={_openModal}
-        title={_modalTitle}
-        focusAfter={_ssnRef}
-        setOpen={_setOpenModal} children={
-          <Typography sx={{ mt: 2 }}>
-            {_modalMsg}
-          </Typography>
-        }
-      />
       {_checkoutCompleted ? (
         <SvgSuccessfulPurchase />
       ) : (

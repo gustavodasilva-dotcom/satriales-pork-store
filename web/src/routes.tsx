@@ -1,6 +1,6 @@
 import AdminLogin from 'pages/Admin/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from 'context/Auth/AuthProvider';
+import { AuthProvider } from 'context/Auth';
 import RequireAuth from 'components/RequireAuth';
 import PersistLogin from 'components/PersistLogin';
 import Toolbar from 'components/Toolbar';

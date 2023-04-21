@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import { DeleteForever, Edit } from '@mui/icons-material';
-import CalculateProductPrice from 'utils/CalculateProductPrice';
+import calculateProductPrice from 'utils/CalculateProductPrice';
 import { IProductListProps } from './types';
 
 const ProductsList: FC<IProductListProps> = ({
@@ -18,7 +18,7 @@ const ProductsList: FC<IProductListProps> = ({
     };
 
     const calcProductPrices = productsToCheckout.map(item => {
-      return CalculateProductPrice(item.product, item.quantity);
+      return calculateProductPrice(item.product, item.quantity);
     });
 
     const productPricesSum = calcProductPrices.reduce(sumProductPrices, 0);
@@ -93,7 +93,7 @@ const ProductsList: FC<IProductListProps> = ({
                   {item.quantity.toString()}
                 </TableCell>
                 <TableCell>
-                  $ {CalculateProductPrice(item.product, item.quantity).toFixed(2)}
+                  $ {calculateProductPrice(item.product, item.quantity).toFixed(2)}
                 </TableCell>
                 <TableCell>
                   <IconButton>

@@ -1,10 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { styles } from './styles';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { useParams, useNavigate } from 'react-router-dom';
+import { plainModal } from 'utils/Modals';
+
 import { IProduct } from 'interfaces/IProduct';
 import { IProductCategory } from 'interfaces/IProductCategory';
+import { styles } from './styles';
 
 const URL = 'v2/products';
 
@@ -20,6 +23,7 @@ const ProductsFormAdmin: FC = () => {
 
   const _axiosPrivate = useAxiosPrivate();
   const _navigate = useNavigate();
+  const _location = useLocation();
 
   const _getProduct = () => {
     _axiosPrivate.get<IProduct>(`${URL}/${id}`)
@@ -40,8 +44,26 @@ const ProductsFormAdmin: FC = () => {
       .then(res => {
         _setCategories(res.data);
       })
-      .catch(err => {
-        console.error(err);
+      .catch(error => {
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else if (error?.response?.status === 404) {
+          message = 'Product not found';
+        } else {
+          message = 'Failed to process product';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 

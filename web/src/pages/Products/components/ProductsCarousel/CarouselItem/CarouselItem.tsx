@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import axios from 'api/axios';
 
 import { IProduct } from 'interfaces/IProduct';
+import { plainModal } from 'utils/Modals';
 
 import { ICarouselItemProps } from './CarouselItem.types';
 import imageExample from 'assets/fettuccine.jpeg';
@@ -23,14 +24,26 @@ const CarouselItem: FC<ICarouselItemProps> = ({
         const data = res.data;
         _setProducts(data);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(() => {
+        const message = 'Error while contacting the server';
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 
   const _onLoad = () => {
     _loadProducts();
     _setWidth(carouselRef.current!.scrollWidth - carouselRef.current!.offsetWidth);
+  };
+
+  const _handleAddToCart = () => {
+    plainModal({
+      type: 'warning',
+      message: 'This function is not available right now!'
+    });
   };
 
   useEffect(() => {
@@ -42,6 +55,9 @@ const CarouselItem: FC<ICarouselItemProps> = ({
       className='CarouselItem'
       drag='x'
       dragConstraints={{ right: 0, left: -_width }}
+      initial={{ x: 100 }}
+      animate={{ x: 0 }}
+      transition={{ duration: 0.8 }}
     >
       {_products.map((product) => (
         <motion.div
@@ -58,7 +74,7 @@ const CarouselItem: FC<ICarouselItemProps> = ({
             <span>$ {parseFloat(product.price.$numberDecimal).toFixed(2)}</span>
           </div>
           <div className='button-wrapper'>
-            <button>
+            <button onClick={_handleAddToCart}>
               Add to cart
             </button>
           </div>

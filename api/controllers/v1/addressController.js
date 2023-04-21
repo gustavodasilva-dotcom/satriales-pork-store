@@ -15,7 +15,7 @@ const handleGetBrazilianAddressByZipCode = async (req, res) => {
     try {
       const response = await axios.get(`https://viacep.com.br/ws/${zipcode}/json/`);
       const viaCep = response.data;
-      if (!viaCep) return res.sendStatus(404);
+      if (viaCep?.erro) return res.sendStatus(404);
 
       const country = process.env.DEFAULT_COUNTRY;
       let foundCountry = await Country.findOne({ name: country });

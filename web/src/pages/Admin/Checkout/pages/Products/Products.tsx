@@ -1,23 +1,22 @@
-import { FC, useRef, useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { FC, useState } from 'react';
+import { Box } from '@mui/material';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
+import { plainModal } from 'utils/Modals';
 import SearchProduct from '../../components/SearchProduct/SearchProduct';
 import ProductList from '../../components/ProductsList';
+
 import { IProductCheckout } from 'interfaces/IProductCheckout';
 import { ICheckout } from 'interfaces/ICheckout';
-import AdminModal from 'components/Admin/AdminModal';
 
 const CheckoutProducts: FC = () => {
   const [_productsToList, _setProductToList] = useState<IProductCheckout[]>([]);
   const [_purchaseTotalPrice, _setPurchaseTotalPrice] = useState('');
-  const [_openModal, _setOpenModal] = useState(false);
-  const [_modalTitle, _setModalTitle] = useState('');
-  const [_modalMsg, _setModalMsg] = useState('');
 
   const _axiosPrivate = useAxiosPrivate();
   const _navigate = useNavigate();
-  const _ssnRef = useRef<HTMLInputElement>(null);
+  const _location = useLocation();
 
   const { id } = useParams();
 
@@ -41,29 +40,30 @@ const CheckoutProducts: FC = () => {
         _navigate(`/admin/checkout/payment/${data._id}`);
       })
       .catch(error => {
-        _setOpenModal(true);
-        _setModalTitle('Ops!');
+        let message: string;
 
-        if (error.response.status === 400) {
-          _setModalMsg('Wrong data sent to the server. Please, contact the administrator');
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 400) {
+          message = 'Wrong data sent to the server. Please, contact the administrator';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
         } else {
-          _setModalMsg('Error while contacting the server');
+          message = 'Error while contacting the server';
         }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <AdminModal
-        open={_openModal}
-        title={_modalTitle}
-        focusAfter={_ssnRef}
-        setOpen={_setOpenModal} children={
-          <Typography sx={{ mt: 2 }}>
-            {_modalMsg}
-          </Typography>
-        }
-      />
       <SearchProduct
         productsToList={_productsToList}
         setProductsToList={_setProductToList}

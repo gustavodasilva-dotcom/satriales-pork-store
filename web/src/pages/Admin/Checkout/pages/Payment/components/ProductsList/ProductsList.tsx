@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import CalculateProductPrice from 'utils/CalculateProductPrice';
+import calculateProductPrice from 'utils/CalculateProductPrice';
 import { IProductsListProps } from './types';
 
 const ProductsList: FC<IProductsListProps> = ({ checkout }) => {
@@ -45,7 +45,7 @@ const ProductsList: FC<IProductsListProps> = ({ checkout }) => {
                   {item.quantity.toString()}
                 </TableCell>
                 <TableCell>
-                  {`$ ${CalculateProductPrice(item.product, item.quantity).toFixed(2)}`}
+                  {`$ ${calculateProductPrice(item.product, item.quantity).toFixed(2)}`}
                 </TableCell>
               </TableRow>
             ))}

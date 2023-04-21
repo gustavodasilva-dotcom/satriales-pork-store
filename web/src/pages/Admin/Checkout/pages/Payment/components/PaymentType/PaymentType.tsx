@@ -1,9 +1,12 @@
-import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import useAxiosPrivate from "hooks/useAxiosPrivate";
 import { useState, useEffect, FC } from "react";
+import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
+
+import useAxiosPrivate from "hooks/useAxiosPrivate";
+
 import { IPaymentTypes } from "interfaces/IPaymentTypes";
 import { IPaymentTypeProps } from "./types";
+import { plainModal } from "utils/Modals";
 
 const PaymentType: FC<IPaymentTypeProps> = ({
   checkout,
@@ -28,9 +31,27 @@ const PaymentType: FC<IPaymentTypeProps> = ({
           signal: controller.signal
         });
         isMounted && _setPaymentTypes(response.data);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
-        _navigate('/admin/login', { state: { from: _location }, replace: true });
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 400) {
+          message = 'Wrong data sent to the server. Please, contact the administrator';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else {
+          message = 'Error while contacting the server';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       }
     };
 

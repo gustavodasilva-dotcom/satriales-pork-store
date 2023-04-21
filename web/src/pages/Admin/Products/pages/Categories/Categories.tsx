@@ -1,9 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import { DeleteForever, Edit } from '@mui/icons-material';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { IProductCategory } from 'interfaces/IProductCategory';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
+import { plainModal } from 'utils/Modals';
+
+import { IProductCategory } from 'interfaces/IProductCategory';
 
 const URL = 'v2/products-categories';
 
@@ -24,9 +27,24 @@ const Categories: FC = () => {
           signal: controller.signal
         });
         isMounted && _setCategories(response.data);
-      } catch (error) {
-        console.error(error);
-        _navigate('/admin/login', { state: { from: _location }, replace: true });
+      } catch (error: any) {
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else {
+          message = 'Failed to get categories';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       }
     };
 
@@ -47,8 +65,25 @@ const Categories: FC = () => {
         _setCategories([...otherCategories]);
       })
       .catch(error => {
-        console.error(error);
-        _navigate('/admin/login', { state: { from: _location }, replace: true });
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else if (error?.response?.status === 404) {
+          message = 'Category not found';
+        } else {
+          message = 'Failed to get categories';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       })
   };
 

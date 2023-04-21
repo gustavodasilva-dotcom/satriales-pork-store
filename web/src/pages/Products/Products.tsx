@@ -1,9 +1,11 @@
 import { FC, useEffect, useState } from 'react';
-import axios from 'api/axios';
 
+import axios from 'api/axios';
+import { plainModal } from 'utils/Modals';
+
+import ProductsCarousel from './components/ProductsCarousel/ProductsCarousel';
 import { IProductCategory } from 'interfaces/IProductCategory';
 import './Products.style.scss';
-import ProductsCarousel from './components/ProductsCarousel/ProductsCarousel';
 
 const Products: FC = () => {
   const [_productCategories, _setProductCategories] = useState<IProductCategory[]>([]);
@@ -13,8 +15,19 @@ const Products: FC = () => {
       .then(res => {
         _setProductCategories(res.data);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        let message: string;
+
+        if (error?.response?.status === 404) {
+          message = 'Client not found';
+        } else {
+          message = 'Error while contacting the server';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 
@@ -34,7 +47,7 @@ const Products: FC = () => {
           </h1>
           <ProductsCarousel
             category={category}
-          /> 
+          />
         </div>
       ))}
     </div>
