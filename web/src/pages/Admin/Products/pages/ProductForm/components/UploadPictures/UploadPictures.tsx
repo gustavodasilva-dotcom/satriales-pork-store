@@ -1,50 +1,88 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { DeleteForever, Visibility } from '@mui/icons-material';
-import { Box, Button, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
+import { confirmModal, imagePreviewModal, plainModal } from 'utils/Modals';
+
+import { IUploadPicturesProps } from './UploadPictures.types';
+import { IImage } from 'interfaces/IImage';
 import './UploadPictures.scss';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+const UploadPictures: FC<IUploadPicturesProps> = ({
+  imageList,
+  setImageList
+}) => {
+  const [_selectedImage, _setSelectedImage] = useState<IImage | null>(null);
 
-const UploadPictures: FC = () => {
-  const [_files, _setFiles] = useState<File[]>([]);
-  const [_selectedImage, _setSelectedImage] = useState<File | null>(null);
-  const [_imagePreview, _setImagePreview] = useState('');
-  const [_openPreviewModal, _setOpenPreviewModal] = useState(false);
+  const _inputFileRef = useRef<HTMLInputElement>(null);
 
-  const inputFileRef = useRef<HTMLInputElement>(null);
+  const _axiosPrivate = useAxiosPrivate();
 
   const _triggerInputFile = () => {
-    inputFileRef.current?.click();
+    _inputFileRef.current?.click();
+  };
+
+  const _cleanInputFile = () => {
+    if (_inputFileRef.current) {
+      _inputFileRef.current.value = '';
+    }
   };
 
   const _handleUploadedFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
-    // TODO: create file size validation
+    if (files && files[0]) {
+      const image = files[0]
 
-    if (files && files.length) {
-      const filesArray = Array.from(files);
-      _setFiles(filesArray);
+      if (image.size > 107000) {
+        plainModal({
+          type: 'warning',
+          message: 'This image is too big!'
+        });
+
+        _cleanInputFile();
+
+        return;
+      }
+
+      const formData = new FormData();
+
+      formData.append('name', image.name);
+      formData.append('image', image);
+      formData.append('contentType', image.type);
+
+      _axiosPrivate.request<IImage>({
+        url: 'v2/images/upload',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: formData
+      })
+        .then(res => {
+          const data = res.data;
+          setImageList([...imageList, data]);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
+
+    _cleanInputFile();
   };
 
   const _handleImagePreview = (): (() => void) | undefined => {
     if (_selectedImage) {
-      const objectUrl = URL.createObjectURL(_selectedImage!);
+      const buffer = new Blob([new Uint8Array(_selectedImage.image.data).buffer]);
+      const objectUrl = URL.createObjectURL(buffer);
 
-      _setImagePreview(objectUrl);
-      _setOpenPreviewModal(true);
+      imagePreviewModal({
+        url: objectUrl,
+        alt: _selectedImage.name
+      });
+
+      _setSelectedImage(null);
 
       return () => {
         URL.revokeObjectURL(objectUrl);
@@ -52,9 +90,27 @@ const UploadPictures: FC = () => {
     }
   };
 
-  const _deleteImage = (image: File): void => {
-    const otherImages = _files.filter(file => file.name !== image.name);
-    _setFiles(otherImages);
+  const _handleDeleteImage = (image: IImage): void => {
+    const deleteImage = async (): Promise<any> => {
+      try {
+        const response = await _axiosPrivate.delete<IImage>(`v2/images/${image._id}`);
+        const data = response.data;
+        
+        const otherImages = imageList.filter(file => file._id !== data._id);
+        return setImageList(otherImages);
+      } catch (error) {
+        return () => console.log(error);
+      }
+    };
+
+    confirmModal({
+      type: 'warning',
+      title: 'Warning!',
+      message: 'Are you sure that you want to delete this image?',
+      confirmText: 'Yes!',
+      cancelText: 'No!',
+      callback: deleteImage
+    });
   };
 
   useEffect(() => {
@@ -74,10 +130,9 @@ const UploadPictures: FC = () => {
         </Button>
         <input
           type='file'
-          ref={inputFileRef}
+          ref={_inputFileRef}
           onChange={_handleUploadedFiles}
           className='file-input-field'
-          multiple
         />
         <TableContainer>
           <Table>
@@ -92,7 +147,7 @@ const UploadPictures: FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {_files.map((file, index) => (
+              {imageList.map((file, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     {file.name}
@@ -101,7 +156,7 @@ const UploadPictures: FC = () => {
                     <IconButton onClick={() => _setSelectedImage(file)}>
                       <Visibility color='primary' />
                     </IconButton>
-                    <IconButton onClick={() => _deleteImage(file)}>
+                    <IconButton onClick={() => _handleDeleteImage(file)}>
                       <DeleteForever color='error' />
                     </IconButton>
                   </TableCell>
@@ -111,16 +166,6 @@ const UploadPictures: FC = () => {
           </Table>
         </TableContainer>
       </Paper>
-      <Modal
-        open={_openPreviewModal}
-        onClose={() => _setOpenPreviewModal(false)}
-      >
-        <Box sx={style}>
-          <div className='image-preview'>
-            <img src={_imagePreview} alt="image preview" />
-          </div>
-        </Box>
-      </Modal>
     </div>
   );
 };

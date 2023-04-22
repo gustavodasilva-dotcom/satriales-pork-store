@@ -20,7 +20,18 @@ const productSchema = yup.object({
     .number()
     .required()
     .positive()
-    .integer()
+    .integer(),
+  images: yup
+    .array()
+    .of(yup
+      .object()
+      .shape({
+        id: yup
+          .string()
+          .required()
+      })
+    )
+    .required()
 });
 
 module.exports = productSchema;

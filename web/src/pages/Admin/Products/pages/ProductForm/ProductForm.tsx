@@ -1,14 +1,15 @@
 import { FC, useEffect, useState } from 'react';
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { plainModal } from 'utils/Modals';
+import UploadPictures from './components/UploadPictures/UploadPictures';
+import CategoriesOptions from './components/CategoriesOptions/CategoriesOptions';
 
 import { IProduct } from 'interfaces/IProduct';
-import { IProductCategory } from 'interfaces/IProductCategory';
+import { IImage } from 'interfaces/IImage';
 import './ProductForm.scss';
-import UploadPictures from './components/UploadPictures/UploadPictures';
 
 const URL = 'v2/products';
 
@@ -18,8 +19,7 @@ const ProductForm: FC = () => {
   const [_price, _setPrice] = useState('');
   const [_category, _setCategory] = useState('');
   const [_barCode, _setBarCode] = useState<Number>();
-  const [_image, _setImage] = useState<File | null>(null);
-  const [_categories, _setCategories] = useState<IProductCategory[]>([]);
+  const [_imageList, _setImageList] = useState<IImage[]>([]);
 
   const { id } = useParams();
 
@@ -35,17 +35,61 @@ const ProductForm: FC = () => {
         _setPrice(res.data.price.$numberDecimal);
         _setCategory(res.data.category._id);
         _setBarCode(res.data.barCode);
+        _setImageList(res.data.images);
       })
-      .catch(err => {
-        console.error(err);
+      .catch(error => {
+        let message: string;
+
+        if (!error?.response) {
+          message = 'No response from the server';
+        } else if (error?.response?.status === 401) {
+          message = 'Unauthorized';
+        } else if (error?.response?.status === 403) {
+          _navigate('/admin/login', { state: { from: _location }, replace: true });
+          return;
+        } else if (error?.response?.status === 404) {
+          message = 'Product not found';
+        } else {
+          message = 'Failed to get product';
+        }
+
+        plainModal({
+          type: 'error',
+          message
+        });
       });
   };
 
-  const _getCategories = () => {
-    _axiosPrivate.get<IProduct[]>('v2/products-categories')
-      .then(res => {
-        _setCategories(res.data);
-      })
+  const _onSave = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let url = URL;
+    let method = 'POST';
+
+    if (id) {
+      method = 'PUT';
+      url += `/${id}`;
+    }
+
+    const images = _imageList.map(image => {
+      return { id: image._id };
+    })
+
+    console.log(_imageList);
+
+    _axiosPrivate.request({
+      url,
+      method,
+      data: {
+        "name": _name,
+        "description": _description,
+        "price": _price,
+        "category": _category,
+        "barCode": _barCode,
+        "images": images
+      }
+    })
+      .then(() => _navigate('/admin/products'))
       .catch(error => {
         let message: string;
 
@@ -69,37 +113,7 @@ const ProductForm: FC = () => {
       });
   };
 
-  const _onSave = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    let url = URL;
-    let method = 'POST';
-
-    if (id) {
-      method = 'PUT';
-      url += `/${id}`;
-    }
-
-    _axiosPrivate.request({
-      url,
-      method,
-      data: {
-        "name": _name,
-        "description": _description,
-        "price": _price,
-        "category": _category,
-        "barCode": _barCode
-      }
-    })
-      .then(() => _navigate('/admin/products'))
-      .catch(err => {
-        console.error(err);
-      });
-  };
-
   useEffect(() => {
-    _getCategories();
-    
     id && _getProduct();
   }, []);
 
@@ -137,30 +151,10 @@ const ProductForm: FC = () => {
           required
           margin='dense'
         />
-        <FormControl
-          fullWidth
-          className='select-container'
-        >
-          <InputLabel id='products-categories-label'>
-            Category
-          </InputLabel>
-          <Select
-            labelId='products-categories-label'
-            id='products-categories'
-            value={_category}
-            label='Category'
-            onChange={e => _setCategory(e.target.value)}
-          >
-            {_categories.map((item, index) => (
-              <MenuItem
-                key={index}
-                value={item._id}
-              >
-                {item.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <CategoriesOptions
+          category={_category}
+          setCategory={_setCategory}
+        />
         <TextField
           type='number'
           label='Bar code'
@@ -171,7 +165,10 @@ const ProductForm: FC = () => {
           required
           margin='dense'
         />
-        <UploadPictures />
+        <UploadPictures
+          imageList={_imageList}
+          setImageList={_setImageList}
+        />
         <Button
           type='submit'
           variant='contained'

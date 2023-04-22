@@ -1,6 +1,6 @@
 import Swal, { SweetAlertResult } from 'sweetalert2';
 
-import { ButtonColors, IPlainModalParams } from './Modals.types';
+import { ButtonColors, IConfirmModalParams, IImagePreviewModalParams, IPlainModalParams } from './Modals.types';
 
 export const plainModal = ({
   type,
@@ -16,7 +16,9 @@ export const plainModal = ({
     switch (type) {
       case 'success':
         return 'Awesome!';
-      case 'error' || 'warning':
+      case 'warning':
+        return 'Oops...';
+      case 'error':
         return 'Oops...';
     }
 
@@ -27,6 +29,43 @@ export const plainModal = ({
     icon: type,
     title: handleModalTitle(),
     text: message,
+    confirmButtonColor: ButtonColors.Default
+  });
+};
+
+export const confirmModal = ({
+  type,
+  title,
+  message,
+  confirmText,
+  cancelText,
+  callback
+}: IConfirmModalParams): void => {
+  Swal.fire({
+    icon: type,
+    title: title,
+    text: message,
+    showCancelButton: true,
+    confirmButtonText: confirmText,
+    confirmButtonColor: ButtonColors.Confirm,
+    cancelButtonText: cancelText,
+    cancelButtonColor: ButtonColors.Error,
+    reverseButtons: true
+  })
+    .then((result) => {
+      if (result.isConfirmed) {
+        callback();
+      }
+    })
+};
+
+export const imagePreviewModal = ({
+  url,
+  alt
+}: IImagePreviewModalParams): Promise<SweetAlertResult<any>> => {
+  return Swal.fire({
+    imageUrl: url,
+    imageAlt: alt,
     confirmButtonColor: ButtonColors.Default
   });
 };
