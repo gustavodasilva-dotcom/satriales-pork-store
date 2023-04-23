@@ -11,7 +11,9 @@ import './UploadPictures.scss';
 
 const UploadPictures: FC<IUploadPicturesProps> = ({
   imageList,
-  setImageList
+  setImageList,
+  imagesDeleted,
+  setImagesDeleted
 }) => {
   const [_selectedImage, _setSelectedImage] = useState<IImage | null>(null);
 
@@ -95,6 +97,8 @@ const UploadPictures: FC<IUploadPicturesProps> = ({
       try {
         const response = await _axiosPrivate.delete<IImage>(`v2/images/${image._id}`);
         const data = response.data;
+
+        setImagesDeleted([...imagesDeleted, data._id]);
         
         const otherImages = imageList.filter(file => file._id !== data._id);
         return setImageList(otherImages);

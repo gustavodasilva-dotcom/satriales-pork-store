@@ -1,5 +1,20 @@
 const yup = require('yup');
 
+const imagesSchema = yup.object({
+  uploads: yup.array().of(
+    yup
+      .object()
+      .shape({
+        id: yup
+          .string()
+          .required()
+      })
+    ).required(),
+  deletes: yup.array().of(
+    yup.string()
+  )
+});
+
 const productSchema = yup.object({
   name: yup
     .string()
@@ -21,17 +36,7 @@ const productSchema = yup.object({
     .required()
     .positive()
     .integer(),
-  images: yup
-    .array()
-    .of(yup
-      .object()
-      .shape({
-        id: yup
-          .string()
-          .required()
-      })
-    )
-    .required()
+  images: imagesSchema
 });
 
 module.exports = productSchema;

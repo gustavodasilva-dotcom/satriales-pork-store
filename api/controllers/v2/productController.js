@@ -65,7 +65,7 @@ const handleNewProduct = async (req, res) => {
     });
     const newProduct = await Product.findById(result._id).populate('category');
 
-    const imagesPromises = validBody.images.map(async (image) => {
+    const imagesPromises = validBody.images.uploads.map(async (image) => {
       return await ProductImage.create({
         product: newProduct._id,
         image: image.id
@@ -101,7 +101,7 @@ const handleUpdateProduct = async (req, res) => {
 
     const result = await product.save();
 
-    const imagesPromises = validBody.images.map(async (image) => {
+    const imagesUploadsPromises = validBody.images.uploads.map(async (image) => {
       const imageFound = await ProductImage.findOne({ image: image.id });
 
       if (!imageFound) {
@@ -112,7 +112,12 @@ const handleUpdateProduct = async (req, res) => {
       }
     });
 
-    await Promise.all(imagesPromises);
+    const imagesDeletesPromises = validBody.images.deletes?.map(async (image) => {
+      return await ProductImage.deleteOne({ image: image });
+    });
+
+    await Promise.all(imagesUploadsPromises);
+    await Promise.all(imagesDeletesPromises);
 
     res.json(result);
   } catch (error) {

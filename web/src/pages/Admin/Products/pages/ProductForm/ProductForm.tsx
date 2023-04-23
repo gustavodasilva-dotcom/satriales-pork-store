@@ -20,6 +20,7 @@ const ProductForm: FC = () => {
   const [_category, _setCategory] = useState('');
   const [_barCode, _setBarCode] = useState<Number>();
   const [_imageList, _setImageList] = useState<IImage[]>([]);
+  const [_imagesDeleted, _setImagesDeleted] = useState<string[]>([]);
 
   const { id } = useParams();
 
@@ -86,7 +87,10 @@ const ProductForm: FC = () => {
         "price": _price,
         "category": _category,
         "barCode": _barCode,
-        "images": images
+        "images": {
+          "uploads": images,
+          "deletes": _imagesDeleted
+        }
       }
     })
       .then(() => _navigate('/admin/products'))
@@ -168,6 +172,8 @@ const ProductForm: FC = () => {
         <UploadPictures
           imageList={_imageList}
           setImageList={_setImageList}
+          imagesDeleted={_imagesDeleted}
+          setImagesDeleted={_setImagesDeleted}
         />
         <Button
           type='submit'
