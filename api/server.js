@@ -43,6 +43,7 @@ app.use('/api/v2/products-categories', require('./routes/v2/productsCategories')
 app.use('/api/v2/persons', require('./routes/v2/person'));
 app.use('/api/v2/payments', require('./routes/v2/payment'));
 app.use('/api/v2/checkouts', require('./routes/v2/checkout'));
+app.use('/api/v2/images', require('./routes/v2/images'));
 
 mongoose.connection.once('open', async () => {
   console.log('Connected to MongoDB');

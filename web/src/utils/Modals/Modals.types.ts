@@ -13,3 +13,17 @@ export interface IPlainModalParams {
   customTitle?: string;
   message: string;
 };
+
+export interface IConfirmModalParams {
+  type: SweetAlertIcon;
+  title: string;
+  message: string;
+  confirmText: string;
+  cancelText: string;
+  callback(): Promise<any>;
+};
+
+export interface IImagePreviewModalParams {
+  url: string;
+  alt: string;
+};
