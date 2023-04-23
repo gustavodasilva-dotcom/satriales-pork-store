@@ -1,3 +1,4 @@
+import { IImage } from "./IImage";
 import { IProductCategory } from "./IProductCategory";
 
 export interface IProduct {
@@ -7,6 +8,7 @@ export interface IProduct {
   category: IProductCategory;
   barCode: Number;
   _id: string;
+  images: IImage[];
 };
 
 export interface IPrice {

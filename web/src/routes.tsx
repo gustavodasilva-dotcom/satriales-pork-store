@@ -14,7 +14,7 @@ import AdminHome from 'pages/Admin/Home';
 import HeaderBarAdmin from 'components/Admin/HeaderBar';
 import PersonalInfoAdmin from 'pages/Admin/PersonalInfo';
 import ProductsAdmin from 'pages/Admin/Products';
-import ProductsFormAdmin from 'pages/Admin/Products/pages/Form';
+import ProductsFormAdmin from 'pages/Admin/Products/pages/ProductForm';
 import ProductsCategoriesAdmin from 'pages/Admin/Products/pages/Categories';
 import ProductsCategoriesFormAdmin from 'pages/Admin/Products/pages/Categories/Form';
 import ClientsAdmin from 'pages/Admin/Clients';
