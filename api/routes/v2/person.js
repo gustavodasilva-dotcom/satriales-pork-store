@@ -6,7 +6,7 @@ router.route('/natural')
   .get(naturalPersonController.handleGetNaturalPersons)
   .post(naturalPersonController.handleNewNaturalPerson);
 
-router.get('/natural/:ssn', naturalPersonController.handleGetNaturalPersonBySsn);
+router.get('/natural/:ssn/ssn', naturalPersonController.handleGetNaturalPersonBySsn);
 
 router.route('/natural/:id')
   .get(naturalPersonController.handleGetNaturalPerson)

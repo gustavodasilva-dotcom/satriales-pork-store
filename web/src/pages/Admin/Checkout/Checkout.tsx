@@ -49,7 +49,7 @@ const Checkout: FC = () => {
 
   const _handleClientSearch = () => {
     if (_clientSsn) {
-      _axiosPrivate.get<INaturalPerson>(`v2/persons/natural/${_clientSsn}`)
+      _axiosPrivate.get<INaturalPerson>(`v2/persons/natural/${_clientSsn}/ssn`)
         .then(res => {
           const data = res.data;
           _setClientSearched(data);

@@ -1,5 +1,7 @@
 const errorHandler = require('../../middlewares/errorHandler');
 const Product = require('../../models/product/Product');
+const ProductImage = require('../../models/images/ProductImage');
+const Image = require('../../models/images/Image');
 
 const handleGetProductByCategory = async (req, res) => {
   const { id } = req.params;
@@ -27,6 +29,42 @@ const handleGetProductByCategory = async (req, res) => {
   }
 };
 
+const handleGetProductById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findById(id).populate('category');
+    if (!product) return res.sendStatus(404);
+
+    const productImages = await ProductImage.find({ product: product._id });
+
+    const productImagesPromises = productImages.map(async (productImage) => {
+      return await Image.findById(productImage.image);
+    });
+
+    Promise.all(productImagesPromises)
+      .then(response => {
+        res.json({
+          "_id": product._id,
+          "name": product.name,
+          "description": product.description,
+          "price": product.price,
+          "category": {
+            "_id": product.category._id,
+            "name": product.category.name
+          },
+          "images": [...response]
+        });
+      })
+      .catch(error => {
+        errorHandler(error, res);
+      });
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};
+
 module.exports = {
-  handleGetProductByCategory
+  handleGetProductByCategory,
+  handleGetProductById
 };

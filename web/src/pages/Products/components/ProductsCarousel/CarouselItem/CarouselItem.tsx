@@ -1,5 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { FaShoppingCart } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import axios from 'api/axios';
 
 import { IProduct } from 'interfaces/IProduct';
@@ -17,6 +19,8 @@ const CarouselItem: FC<ICarouselItemProps> = ({
 
   const [_width, _setWidth] = useState(0);
   const [_products, _setProducts] = useState<IProduct[]>([]);
+
+  const _navigate = useNavigate();
 
   const _loadProducts = () => {
     axios.get<IProduct[]>(`v1/products/${_id}/category`)
@@ -74,8 +78,17 @@ const CarouselItem: FC<ICarouselItemProps> = ({
             <span>$ {parseFloat(product.price.$numberDecimal).toFixed(2)}</span>
           </div>
           <div className='button-wrapper'>
-            <button onClick={_handleAddToCart}>
-              Add to cart
+            <button
+              className='see-more'
+              onClick={() => _navigate(`details/${product._id}`)}
+            >
+              See more
+            </button>
+            <button
+              className='add-to-cart'
+              onClick={_handleAddToCart}
+            >
+              <FaShoppingCart />
             </button>
           </div>
         </motion.div>
