@@ -35,18 +35,7 @@ const UploadPictures: FC<IUploadPicturesProps> = ({
     const files = e.target.files;
 
     if (files && files[0]) {
-      const image = files[0]
-
-      if (image.size > 107000) {
-        plainModal({
-          type: 'warning',
-          message: 'This image is too big!'
-        });
-
-        _cleanInputFile();
-
-        return;
-      }
+      const image = files[0];
 
       const formData = new FormData();
 

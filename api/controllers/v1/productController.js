@@ -10,7 +10,7 @@ const handleGetProductByCategory = async (req, res) => {
     const products = await Product.find({ category: id }).populate('category');
     if (!products.length === 0) return res.sendStatus(204);
 
-    const response = products.map(product => {
+    const productsResponse = products.map(product => {
       return {
         "_id": product._id,
         "name": product.name,
@@ -21,9 +21,33 @@ const handleGetProductByCategory = async (req, res) => {
           "name": product.category.name
         }
       };
-    })
+    });
 
-    res.json(response);
+    const productImages = productsResponse.map(async (product) => {
+      const productsImages = await ProductImage.find({ product: product._id });
+
+      const imagesPromises = productsImages.map(async (productImage) => {
+        return await Image.findById(productImage.image);
+      });
+
+      const promisesResponse = await Promise.all(imagesPromises);
+
+      return {
+        "_id": product._id,
+        "name": product.name,
+        "description": product.description,
+        "price": product.price,
+        "category": {
+          "_id": product.category._id,
+          "name": product.category.name
+        },
+        "images": [...promisesResponse]
+      }
+    });
+
+    const productsWithImages = await Promise.all(productImages)
+
+    res.json(productsWithImages);
   } catch (error) {
     errorHandler(error, res);
   }

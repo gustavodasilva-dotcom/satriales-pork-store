@@ -1,5 +1,5 @@
-import { IImage } from "./IImage";
-import { IProductCategory } from "./IProductCategory";
+import { IImage } from './IImage';
+import { IProductCategory } from './IProductCategory';
 
 export interface IProduct {
   description: string;

@@ -6,9 +6,10 @@ import axios from 'api/axios';
 
 import { IProduct } from 'interfaces/IProduct';
 import { plainModal } from 'utils/Modals';
+import bufferToBase64 from 'utils/BufferToBase64';
 
 import { ICarouselItemProps } from './CarouselItem.types';
-import imageExample from 'assets/fettuccine.jpeg';
+import NoImageAvailable from 'assets/no-image-available.jpg';
 import './CarouselItem.style.scss';
 
 const CarouselItem: FC<ICarouselItemProps> = ({
@@ -69,7 +70,13 @@ const CarouselItem: FC<ICarouselItemProps> = ({
           key={product._id}
         >
           <div className='product-image'>
-            <img src={imageExample} alt={product.name} />
+            <img
+              src={
+                product.images.length > 0
+                ? `data:image/png;base64,${bufferToBase64(product.images[0].image.data)}`
+                : NoImageAvailable}
+              alt={''}
+            />
           </div>
           <div className='product-name'>
             <h2>{product.name}</h2>
