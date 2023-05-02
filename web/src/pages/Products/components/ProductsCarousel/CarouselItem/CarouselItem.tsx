@@ -1,12 +1,15 @@
 import { FC, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { FaShoppingCart } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import axios from 'api/axios';
 
 import { IProduct } from 'interfaces/IProduct';
 import { plainModal } from 'utils/Modals';
+import bufferToBase64 from 'utils/BufferToBase64';
 
 import { ICarouselItemProps } from './CarouselItem.types';
-import imageExample from 'assets/fettuccine.jpeg';
+import NoImageAvailable from 'assets/no-image-available.jpg';
 import './CarouselItem.style.scss';
 
 const CarouselItem: FC<ICarouselItemProps> = ({
@@ -17,6 +20,8 @@ const CarouselItem: FC<ICarouselItemProps> = ({
 
   const [_width, _setWidth] = useState(0);
   const [_products, _setProducts] = useState<IProduct[]>([]);
+
+  const _navigate = useNavigate();
 
   const _loadProducts = () => {
     axios.get<IProduct[]>(`v1/products/${_id}/category`)
@@ -65,7 +70,13 @@ const CarouselItem: FC<ICarouselItemProps> = ({
           key={product._id}
         >
           <div className='product-image'>
-            <img src={imageExample} alt={product.name} />
+            <img
+              src={
+                product.images.length > 0
+                ? `data:image/png;base64,${bufferToBase64(product.images[0].image.data)}`
+                : NoImageAvailable}
+              alt={''}
+            />
           </div>
           <div className='product-name'>
             <h2>{product.name}</h2>
@@ -74,8 +85,17 @@ const CarouselItem: FC<ICarouselItemProps> = ({
             <span>$ {parseFloat(product.price.$numberDecimal).toFixed(2)}</span>
           </div>
           <div className='button-wrapper'>
-            <button onClick={_handleAddToCart}>
-              Add to cart
+            <button
+              className='see-more'
+              onClick={() => _navigate(`details/${product._id}`)}
+            >
+              See more
+            </button>
+            <button
+              className='add-to-cart'
+              onClick={_handleAddToCart}
+            >
+              <FaShoppingCart />
             </button>
           </div>
         </motion.div>
