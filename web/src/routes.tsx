@@ -6,6 +6,7 @@ import PersistLogin from 'components/PersistLogin';
 import Toolbar from 'components/Toolbar';
 import Home from 'pages/Home';
 import Products from 'pages/Products';
+import ProductDetails from 'pages/Products/pages/ProductDetails/ProductDetails';
 import AboutUs from 'pages/AboutUs';
 import Checkout from 'pages/Admin/Checkout';
 import CheckoutProducts from 'pages/Admin/Checkout/pages/Products';
@@ -30,6 +31,7 @@ const AppRouter = () => {
             <Route path='/home' element={<Home />} />
             <Route path='/about-us' element={<AboutUs />} />
             <Route path='/products' element={<Products />} />
+            <Route path='/products/details/:id' element={<ProductDetails />} />
           </Route>
 
           <Route path='/admin/login' element={<AdminLogin />} />
