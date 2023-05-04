@@ -113,7 +113,7 @@ const Categories: FC = () => {
                   {category?.name}
                 </TableCell>
                 <TableCell>
-                  <Link to={`/admin/products/${category._id}`}>
+                  <Link to={`/admin/products/categories/${category._id}`}>
                     <Edit color='primary' />
                   </Link>
                   <DeleteForever

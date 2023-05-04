@@ -1,12 +1,14 @@
 import { FC, useState } from 'react';
 import { Link as RouterLink, Outlet, useNavigate } from 'react-router-dom';
 import { AccountCircle } from '@mui/icons-material';
-import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Paper, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Container, IconButton, Link, Menu, MenuItem, Paper, Toolbar, Typography } from '@mui/material';
 
 import useAuth from 'hooks/useAuth';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { plainModal } from 'utils/Modals';
+import MenuPage from './components/MenuPage';
 
+import { menuPages } from './HeaderBar.data';
 import { styles } from './styles';
 
 const HeaderBarAdmin: FC = () => {
@@ -50,26 +52,12 @@ const HeaderBarAdmin: FC = () => {
               </Typography>
             </Link>
             <Box sx={{ display: 'flex', flexGrow: 1 }}>
-              <Link component={RouterLink} to='checkout'>
-                <Button sx={{ my: 2, color: 'white', margin: 2 }}>
-                  Checkout
-                </Button>
-              </Link>
-              <Link component={RouterLink} to='clients'>
-                <Button sx={{ my: 2, color: 'white', margin: 2 }}>
-                  Clients
-                </Button>
-              </Link>
-              <Link component={RouterLink} to='products'>
-                <Button sx={{ my: 2, color: 'white', margin: 2 }}>
-                  Products
-                </Button>
-              </Link>
-              <Link component={RouterLink} to='products/categories'>
-                <Button sx={{ my: 2, color: 'white', margin: 2 }}>
-                  Products' Categories
-                </Button>
-              </Link>
+              {menuPages.map((menu, index) => (
+                <MenuPage
+                  key={index}
+                  menuPage={menu}
+                />
+              ))}
             </Box>
             <div>
               <IconButton

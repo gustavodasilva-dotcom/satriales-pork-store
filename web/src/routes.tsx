@@ -1,6 +1,6 @@
-import AdminLogin from 'pages/Admin/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from 'context/Auth';
+
+import AdminLogin from 'pages/Admin/Login';
 import RequireAuth from 'components/RequireAuth';
 import PersistLogin from 'components/PersistLogin';
 import Toolbar from 'components/Toolbar';
@@ -20,6 +20,8 @@ import ProductsCategoriesAdmin from 'pages/Admin/Products/pages/Categories';
 import ProductsCategoriesFormAdmin from 'pages/Admin/Products/pages/Categories/Form';
 import ClientsAdmin from 'pages/Admin/Clients';
 import ClientsFormAdmin from 'pages/Admin/Clients/pages/Form';
+
+import { AuthProvider } from 'context/Auth';
 
 const AppRouter = () => {
   return (
