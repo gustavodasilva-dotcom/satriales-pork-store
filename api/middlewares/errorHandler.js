@@ -3,6 +3,8 @@ const { ValidationError } = require('yup');
 const errorHandler = (error, res) => {
   let statusCode = 500;
   let message = error?.message;
+  
+  console.log(message);
 
   if (error instanceof ValidationError) {
     statusCode = 400;

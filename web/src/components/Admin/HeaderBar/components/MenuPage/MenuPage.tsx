@@ -26,9 +26,9 @@ const MenuPage: FC<IMenuItemProps> = ({ menuPage }) => {
             to={menuPage.menu.link!}
           >
             <Button
-              id="basic-button"
+              id='basic-button'
               aria-controls={open ? 'basic-menu' : undefined}
-              aria-haspopup="true"
+              aria-haspopup='true'
               aria-expanded={open ? 'true' : undefined}
               sx={{ my: 2, color: 'white', margin: 2 }}
               onClick={handleClick}
@@ -38,9 +38,9 @@ const MenuPage: FC<IMenuItemProps> = ({ menuPage }) => {
           </Link>
         ) : (
           <Button
-            id="basic-button"
+            id='basic-button'
             aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
+            aria-haspopup='true'
             aria-expanded={open ? 'true' : undefined}
             sx={{ my: 2, color: 'white', margin: 2 }}
             onClick={handleClick}
@@ -50,7 +50,7 @@ const MenuPage: FC<IMenuItemProps> = ({ menuPage }) => {
         )}
       {menuPage.submenus.length > 0 &&
         <Menu
-          id="basic-menu"
+          id='basic-menu'
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
@@ -60,14 +60,12 @@ const MenuPage: FC<IMenuItemProps> = ({ menuPage }) => {
         >
           {menuPage.submenus.map((submenu, index) => (
             <Link
+              key={index}
               component={RouterLink}
               to={submenu.link!}
               sx={{ textDecoration: 'none', color: 'black' }}
             >
-              <MenuItem
-                key={index}
-                onClick={handleClose}
-              >
+              <MenuItem onClick={handleClose}>
                 {submenu.name}
               </MenuItem>
             </Link>

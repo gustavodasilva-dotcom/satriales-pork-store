@@ -21,6 +21,7 @@ const ProductForm: FC = () => {
   const [_barCode, _setBarCode] = useState<Number>();
   const [_imageList, _setImageList] = useState<IImage[]>([]);
   const [_imagesDeleted, _setImagesDeleted] = useState<string[]>([]);
+  const [_stock, _setStock] = useState<Number | undefined>();
 
   const { id } = useParams();
 
@@ -31,12 +32,14 @@ const ProductForm: FC = () => {
   const _getProduct = () => {
     _axiosPrivate.get<IProduct>(`${URL}/${id}`)
       .then(res => {
+        console.log(res);
         _setName(res.data.name);
         _setDescription(res.data.description);
         _setPrice(res.data.price.$numberDecimal);
         _setCategory(res.data.category._id);
         _setBarCode(res.data.barCode);
         _setImageList(res.data.images);
+        _setStock(res.data.stock);
       })
       .catch(error => {
         let message: string;
@@ -168,6 +171,16 @@ const ProductForm: FC = () => {
           fullWidth
           required
           margin='dense'
+        />
+        <TextField
+          type='number'
+          label='Stock quantity'
+          value={_stock}
+          variant='standard'
+          fullWidth
+          required
+          margin='dense'
+          disabled
         />
         <UploadPictures
           imageList={_imageList}

@@ -4,8 +4,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { plainModal } from 'utils/Modals';
-import SearchProduct from '../../components/SearchProduct/SearchProduct';
-import ProductList from '../../components/ProductsList';
+import SearchProduct from 'pages/Admin/Checkout/pages/Products/components/SearchProduct/SearchProduct';
+import ProductList from './components/ProductsList';
 
 import { IProductCheckout } from 'interfaces/IProductCheckout';
 import { ICheckout } from 'interfaces/ICheckout';

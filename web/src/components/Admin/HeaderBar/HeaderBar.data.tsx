@@ -14,8 +14,7 @@ export const menuPages: IMenuPage[] = [{
   submenus: []
 }, {
   menu: {
-    name: 'Products',
-    link: 'products'
+    name: 'Products'
   },
   submenus: [{
     name: 'Products',
@@ -23,5 +22,16 @@ export const menuPages: IMenuPage[] = [{
   }, {
     name: 'Categories',
     link: 'products/categories'
+  }]
+}, {
+  menu: {
+    name: 'Stock'
+  },
+  submenus: [{
+    name: 'New movement',
+    link: 'stock/movements/new'
+  }, {
+    name: 'Movements',
+    link: 'stock/movements'
   }]
 }];
