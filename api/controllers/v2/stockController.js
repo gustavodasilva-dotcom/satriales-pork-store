@@ -7,9 +7,26 @@ const errorHandler = require('../../middlewares/errorHandler');
 const handleGetStockMovementTypes = async (req, res) => {
   try {
     const stockMovementTypes = await StockMovementTypes.find();
-    if (!stockMovementTypes.length === 0) return res.sendStatus(204);
+    
+    if (stockMovementTypes.length === 0) return res.sendStatus(204);
 
     res.json(stockMovementTypes);
+  } catch (error) {
+    errorHandler(error, res);
+  }
+};
+
+const handleGetStockMovements = async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    const stockMovements = await StockMovement
+      .find({ product: productId })
+      .populate('stock product stockMovementType');
+
+    if (stockMovements.length === 0) return res.sendStatus(204);
+
+    res.json(stockMovements);
   } catch (error) {
     errorHandler(error, res);
   }
@@ -48,5 +65,6 @@ const handleStockMovement = async (req, res) => {
 
 module.exports = {
   handleGetStockMovementTypes,
+  handleGetStockMovements,
   handleStockMovement
 };

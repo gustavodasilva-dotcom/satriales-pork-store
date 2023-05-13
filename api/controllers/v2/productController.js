@@ -10,7 +10,16 @@ const handleGetProducts = async (req, res) => {
     const products = await Product.find().populate('category');
     if (!products.length === 0) return res.sendStatus(204);
 
-    res.json(products);
+    const productsStock = products.map(async (product) => {
+      const stockProduct = await Stock.findOne({ product: product._id });
+      return {
+        ...product._doc,
+        stock: stockProduct?.quantity ?? 0
+      };
+    });
+
+    const promisesResult = await Promise.all(productsStock);
+    res.json(promisesResult);
   } catch (error) {
     errorHandler(error, res);
   }

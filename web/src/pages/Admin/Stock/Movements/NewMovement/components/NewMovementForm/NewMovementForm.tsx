@@ -40,7 +40,8 @@ const NewMovementForm: FC<INewMovementFormProps> = ({
     };
     
     _axiosPrivate.post(`${URL}/movements`, data)
-      .then(() => {
+      .then(res => {
+        console.log(res);
         plainModal({
           type: 'success',
           message: `Product's stock updated sucsessfully!`

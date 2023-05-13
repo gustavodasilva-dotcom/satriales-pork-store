@@ -173,14 +173,13 @@ const ProductForm: FC = () => {
           margin='dense'
         />
         <TextField
-          type='number'
+          disabled
           label='Stock quantity'
           value={_stock}
           variant='standard'
           fullWidth
-          required
           margin='dense'
-          disabled
+          defaultValue='0'
         />
         <UploadPictures
           imageList={_imageList}
