@@ -1,6 +1,7 @@
 const yup = require('yup');
 const Checkout = require('../../models/checkout/Checkout');
 const Product = require('../../models/product/Product');
+const Stock = require('../../models/stock/Stock');
 
 const saveProductsSchema = yup.object({
   checkout: yup
@@ -40,6 +41,17 @@ const saveProductsSchema = yup.object({
           quantity: yup
             .number()
             .required()
+        })
+        .test(async (model, ctx) => {
+          const stock = await Stock.findOne({ product: model.product });
+
+          if (model.quantity > stock.quantity) {
+            return ctx.createError({
+              message: `It's no possible to sell more than what's stocked for product ${model.product}`
+            });
+          }
+
+          return true;
         })
     ),
   totalPrice: yup

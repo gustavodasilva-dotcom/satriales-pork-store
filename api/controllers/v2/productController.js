@@ -3,14 +3,23 @@ const Product = require('../../models/product/Product');
 const Images = require('../../models/images/Image');
 const ProductImage = require('../../models/images/ProductImage');
 const productSchema = require('../../validators/send-product');
-const Image = require('../../models/images/Image');
+const Stock = require('../../models/stock/Stock');
 
 const handleGetProducts = async (req, res) => {
   try {
     const products = await Product.find().populate('category');
     if (!products.length === 0) return res.sendStatus(204);
 
-    res.json(products);
+    const productsStock = products.map(async (product) => {
+      const stockProduct = await Stock.findOne({ product: product._id });
+      return {
+        ...product._doc,
+        stock: stockProduct?.quantity ?? 0
+      };
+    });
+
+    const promisesResult = await Promise.all(productsStock);
+    res.json(promisesResult);
   } catch (error) {
     errorHandler(error, res);
   }
@@ -23,6 +32,8 @@ const handleGetProduct = async (req, res) => {
     const product = await Product.findById(id).populate('category');
     if (!product) return res.sendStatus(404);
 
+    const stockProduct = await Stock.findOne({ product: product._id });
+
     const productImages = await ProductImage.find({ product: product._id });
 
     const productImagesPromises = productImages.map(async (productImage) => {
@@ -33,6 +44,7 @@ const handleGetProduct = async (req, res) => {
       .then(response => {
         res.status(201).json({
           ...product._doc,
+          stock: stockProduct?.quantity ?? 0,
           images: [...response]
         });
       })
@@ -64,6 +76,11 @@ const handleNewProduct = async (req, res) => {
       barCode: validBody.barCode
     });
     const newProduct = await Product.findById(result._id).populate('category');
+
+    await Stock.create({
+      product: newProduct._id,
+      quantity: 0
+    });
 
     const imagesPromises = validBody.images.uploads.map(async (image) => {
       return await ProductImage.create({

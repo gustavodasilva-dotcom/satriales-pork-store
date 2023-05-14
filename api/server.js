@@ -9,6 +9,7 @@ const corsOptions = require('./config/configOptions');
 const mongoose = require('mongoose');
 const connectDb = require('./config/dbConn');
 const seedPaymentTypes = require('./seeders/seedPaymentTypes');
+const seedStockMovementTypes = require('./seeders/seedStockMovementTypes');
 const PORT = process.env.PORT || 3500;
 
 connectDb();
@@ -28,25 +29,33 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/v1/register', require('./routes/v1/register'));
-app.use('/api/v1/auth', require('./routes/v1/auth'));
-app.use('/api/v1/refresh', require('./routes/v1/refresh'));
-app.use('/api/v1/logout', require('./routes/v1/logout'));
-app.use('/api/v1/addresses', require('./routes/v1/address'));
-app.use('/api/v1/products', require('./routes/v1/products'));
-app.use('/api/v1/products-categories', require('./routes/v1/productsCategories'));
+const API_PREFIX = '/api'
+const V1_PREFIX = '/v1';
+const V2_PREFIX = '/v2';
 
-app.use('/api/v2/personal-infos', require('./routes/v2/personalInfo'));
+app.use(`${API_PREFIX}${V1_PREFIX}/register`, require('./routes/v1/register'));
+app.use(`${API_PREFIX}${V1_PREFIX}/auth`, require('./routes/v1/auth'));
+app.use(`${API_PREFIX}${V1_PREFIX}/refresh`, require('./routes/v1/refresh'));
+app.use(`${API_PREFIX}${V1_PREFIX}/logout`, require('./routes/v1/logout'));
+app.use(`${API_PREFIX}${V1_PREFIX}/addresses`, require('./routes/v1/address'));
+app.use(`${API_PREFIX}${V1_PREFIX}/products`, require('./routes/v1/products'));
+app.use(`${API_PREFIX}${V1_PREFIX}/products-categories`, require('./routes/v1/productsCategories'));
+
+app.use(`${API_PREFIX}${V2_PREFIX}/personal-infos`, require('./routes/v2/personalInfo'));
 app.use(verifyJwt);
-app.use('/api/v2/products', require('./routes/v2/products'));
-app.use('/api/v2/products-categories', require('./routes/v2/productsCategories'));
-app.use('/api/v2/persons', require('./routes/v2/person'));
-app.use('/api/v2/payments', require('./routes/v2/payment'));
-app.use('/api/v2/checkouts', require('./routes/v2/checkout'));
-app.use('/api/v2/images', require('./routes/v2/images'));
+app.use(`${API_PREFIX}${V2_PREFIX}/products`, require('./routes/v2/products'));
+app.use(`${API_PREFIX}${V2_PREFIX}/products-categories`, require('./routes/v2/productsCategories'));
+app.use(`${API_PREFIX}${V2_PREFIX}/stocks`, require('./routes/v2/stock'));
+app.use(`${API_PREFIX}${V2_PREFIX}/persons`, require('./routes/v2/person'));
+app.use(`${API_PREFIX}${V2_PREFIX}/payments`, require('./routes/v2/payment'));
+app.use(`${API_PREFIX}${V2_PREFIX}/checkouts`, require('./routes/v2/checkout'));
+app.use(`${API_PREFIX}${V2_PREFIX}/images`, require('./routes/v2/images'));
 
 mongoose.connection.once('open', async () => {
   console.log('Connected to MongoDB');
+
   await seedPaymentTypes.exec();
+  await seedStockMovementTypes.exec();
+  
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
