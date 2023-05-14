@@ -7,6 +7,8 @@ export interface IStockMovement {
   stock: IStock;
   product: IProduct;
   stockMovementType: IStockMovementTypes;
+  previousQuantity: Number;
+  currentQuantity: Number;
   date: Date;
   __v: number;
 };

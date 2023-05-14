@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Button, Paper, TextField } from '@mui/material';
 
+import { plainModal } from 'utils/Modals';
 import ProductSearch from 'components/Admin/ProductSearch/ProductSearch';
 
 import { IProduct } from 'interfaces/IProduct';
@@ -30,6 +31,16 @@ const SearchProduct: FC<ISearchProductProps> = ({
     const quantity = e.target.value;
     _setProductQtt(quantity);
 
+    const productQuantity = _productFound?.stock; 
+    if (productQuantity && Number(quantity) > productQuantity.valueOf()) {
+      plainModal({
+        type: 'warning',
+        message: "It's no possible to sell more than what's stocked"
+      });
+      _setProductQtt('');
+      return;
+    }
+
     if (!quantity) {
       _setProductTotalPrice('');
       return;
@@ -40,7 +51,7 @@ const SearchProduct: FC<ISearchProductProps> = ({
       return;
     }
 
-    const totalPrice = parseFloat(_productFound.price.$numberDecimal) * parseInt(quantity);
+    const totalPrice = parseFloat(_productFound.price.$numberDecimal) * Number(quantity);
     _setProductTotalPrice(totalPrice.toFixed(2));
   };
 

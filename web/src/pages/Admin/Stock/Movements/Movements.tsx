@@ -62,6 +62,9 @@ const Movements: FC = () => {
                   <b>Movement type</b>
                 </TableCell>
                 <TableCell>
+                  <b>Previous quantity</b>
+                </TableCell>
+                <TableCell>
                   <b>Current quantity</b>
                 </TableCell>
                 <TableCell>
@@ -83,7 +86,10 @@ const Movements: FC = () => {
                       {movement.stockMovementType.name}
                     </TableCell>
                     <TableCell>
-                      {movement.stock.quantity}
+                      {movement?.previousQuantity?.toString()}
+                    </TableCell>
+                    <TableCell>
+                      {movement?.currentQuantity?.toString()}
                     </TableCell>
                     <TableCell>
                       {formatDatePtBR({

@@ -7,7 +7,7 @@ const errorHandler = require('../../middlewares/errorHandler');
 const handleGetStockMovementTypes = async (req, res) => {
   try {
     const stockMovementTypes = await StockMovementTypes.find();
-    
+
     if (stockMovementTypes.length === 0) return res.sendStatus(204);
 
     res.json(stockMovementTypes);
@@ -48,13 +48,19 @@ const handleStockMovement = async (req, res) => {
       productStock = await Stock.create(rest);
     }
 
+    const previousQuantity = productStock.quantity;
+
     productStock.quantity = validBody.quantity;
     await productStock.save();
+
+    const currentQuantity = productStock.quantity;
 
     const result = await StockMovement.create({
       stock: productStock._id,
       product: validBody.product,
-      stockMovementType: validBody.stockMovementType
+      stockMovementType: validBody.stockMovementType,
+      previousQuantity,
+      currentQuantity
     });
 
     res.status(201).json(result);

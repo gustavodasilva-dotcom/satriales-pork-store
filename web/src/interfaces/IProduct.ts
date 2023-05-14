@@ -9,7 +9,7 @@ export interface IProduct {
   barCode: Number;
   _id: string;
   images: IImage[];
-  stock?: Number;
+  stock: Number;
 };
 
 export interface IPrice {

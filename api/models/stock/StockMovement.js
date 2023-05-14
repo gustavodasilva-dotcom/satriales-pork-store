@@ -17,6 +17,14 @@ const stockMovementSchema = new Schema({
     ref: 'StockMovementType',
     required: true
   },
+  previousQuantity: {
+    type: Number,
+    required: true
+  },
+  currentQuantity: {
+    type: Number,
+    required: true
+  },
   date: {
     type: Schema.Types.Date,
     required: true,
