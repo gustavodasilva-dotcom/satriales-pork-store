@@ -3,8 +3,8 @@ import { IconButton, TextField, Tooltip } from '@mui/material';
 import { HelpOutlineRounded } from '@mui/icons-material';
 
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
-
 import AdvancedSearch from './components/AdvancedSearch';
+
 import IProductSearchProps from './ProductSearch.types';
 import { IProduct } from 'interfaces/IProduct';
 

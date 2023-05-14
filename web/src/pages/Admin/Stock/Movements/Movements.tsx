@@ -3,10 +3,10 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import ProductSearch from 'components/Admin/ProductSearch';
+import { formatDatePtBR } from 'utils/Formatters/Date';
 
 import { IProduct } from 'interfaces/IProduct';
 import { IStockMovement } from 'interfaces/IStockMovement';
-import { formatDatePtBR } from 'utils/Formatters/Date';
 
 const Movements: FC = () => {
   const [_productBarCode, _setProductBarCode] = useState('');
@@ -86,10 +86,18 @@ const Movements: FC = () => {
                       {movement.stockMovementType.name}
                     </TableCell>
                     <TableCell>
-                      {movement?.previousQuantity?.toString()}
+                      {
+                        movement.previousQuantity
+                          ? movement.previousQuantity.toString()
+                          : 'N/A'
+                      }
                     </TableCell>
                     <TableCell>
-                      {movement?.currentQuantity?.toString()}
+                      {
+                        movement.currentQuantity
+                          ? movement.currentQuantity.toString()
+                          : 'N/A'
+                      }
                     </TableCell>
                     <TableCell>
                       {formatDatePtBR({

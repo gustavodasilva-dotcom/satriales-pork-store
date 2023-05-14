@@ -26,6 +26,6 @@ export const formatHoursMinutesSeconds = (date: Date) => {
   return [
     dateConverted.getHours(),
     padTo2Digits(dateConverted.getMinutes()),
-    dateConverted.getSeconds()
+    padTo2Digits(dateConverted.getSeconds())
   ].join(':');
 };

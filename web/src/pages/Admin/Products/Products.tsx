@@ -1,10 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { IProduct } from 'interfaces/IProduct';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Edit, DeleteForever } from '@mui/icons-material';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
 import { plainModal } from 'utils/Modals';
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
+
+import { IProduct } from 'interfaces/IProduct';
 
 const URL = 'v2/products';
 

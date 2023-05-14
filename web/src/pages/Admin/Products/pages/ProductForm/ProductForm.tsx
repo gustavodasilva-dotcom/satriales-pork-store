@@ -6,6 +6,7 @@ import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { plainModal } from 'utils/Modals';
 import UploadPictures from './components/UploadPictures/UploadPictures';
 import CategoriesOptions from './components/CategoriesOptions/CategoriesOptions';
+import GoBack from 'components/Admin/Forms/GoBack';
 
 import { IProduct } from 'interfaces/IProduct';
 import { IImage } from 'interfaces/IImage';
@@ -126,6 +127,7 @@ const ProductForm: FC = () => {
 
   return (
     <Box className='ProductForm'>
+      <GoBack to='/admin/products' />
       <Box
         component='form'
         className='form-wrapper'

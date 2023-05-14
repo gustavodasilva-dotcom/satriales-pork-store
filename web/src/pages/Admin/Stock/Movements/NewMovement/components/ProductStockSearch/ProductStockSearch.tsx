@@ -12,10 +12,23 @@ const ProductStockSearch: FC<IProductStockSearchProps> = ({
 }) => {
   const [_productBarCode, _setProductBarCode] = useState<string>('');
 
-  useEffect(() => {
+  const _setProductFoundBarCode = () => {
     if (productFound)
       _setProductBarCode(productFound.barCode.toString());
+  };
+
+  const _hideFormFromBarCodeField = () => {
+    if (_productBarCode === '')
+      setShowForm(false);
+  };
+
+  useEffect(() => {
+    _setProductFoundBarCode();
   }, [productFound]);
+
+  useEffect(() => {
+    _hideFormFromBarCodeField();
+  }, [_productBarCode]);
 
   return (
     <Box>
