@@ -1,7 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, List, ListItemButton, ListItemText, Modal, TextField } from '@mui/material';
-import { IProduct } from 'interfaces/IProduct';
+
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
+
+import { IProduct } from 'interfaces/IProduct';
 import IAdvancedSearchProps from './types';
 import { styles } from './styles';
 
@@ -18,7 +20,8 @@ const AdvancedSearch: FC<IAdvancedSearchProps> = ({
   const _getProducts = () => {
     _axiosPrivate.get<IProduct[]>('v2/products')
       .then(response => {
-        _setProducts(response.data);
+        const data = response.data;
+        _setProducts(data);
       })
       .catch(error => {
         console.error(error);
@@ -29,7 +32,7 @@ const AdvancedSearch: FC<IAdvancedSearchProps> = ({
     const searchedValue = e.target.value;
 
     if (searchedValue) {
-      const filteredProducts = _products.filter(product => product.name.toLowerCase().includes(searchedValue));
+      const filteredProducts = _products.filter(product => product.name.toLowerCase().includes(searchedValue.toLowerCase()));
       _setProductsFiltered(filteredProducts);
     } else {
       _setProductsFiltered([]);

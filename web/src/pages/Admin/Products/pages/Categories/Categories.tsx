@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { DeleteForever, Edit } from '@mui/icons-material';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
@@ -113,13 +113,23 @@ const Categories: FC = () => {
                   {category?.name}
                 </TableCell>
                 <TableCell>
-                  <Link to={`/admin/products/${category._id}`}>
-                    <Edit color='primary' />
-                  </Link>
-                  <DeleteForever
+                  <IconButton
+                    aria-label='edit'
+                    size='medium'
+                  >
+                    <Link to={`/admin/products/categories/${category._id}`}>
+                      <Edit color='primary' />
+                    </Link>
+                  </IconButton>
+                  <IconButton
+                    aria-label='delete'
+                    size='medium'
+                  >
+                    <DeleteForever
                     color='error'
                     onClick={() => _deleteCategory(category._id)}
                   />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

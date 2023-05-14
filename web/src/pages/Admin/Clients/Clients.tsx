@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { DeleteForever, Edit } from '@mui/icons-material';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
@@ -119,13 +119,23 @@ const ClientsAdmin: FC = () => {
                   {client?.ssn}
                 </TableCell>
                 <TableCell>
-                  <Link to={`/admin/clients/${client._id}`}>
-                    <Edit color='primary' />
-                  </Link>
-                  <DeleteForever
-                    color='error'
-                    onClick={() => _deleteClient(client._id)}
-                  />
+                  <IconButton
+                    aria-label='edit'
+                    size='medium'
+                  >
+                    <Link to={`/admin/clients/${client._id}`}>
+                      <Edit color='primary' />
+                    </Link>
+                  </IconButton>
+                  <IconButton
+                    aria-label='delete'
+                    size='medium'
+                  >
+                    <DeleteForever
+                      color='error'
+                      onClick={() => _deleteClient(client._id)}
+                    />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

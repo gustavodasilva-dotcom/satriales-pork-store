@@ -1,10 +1,12 @@
 import { FC, useEffect, useState } from 'react';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import useAxiosPrivate from 'hooks/useAxiosPrivate';
-import { IProduct } from 'interfaces/IProduct';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Edit, DeleteForever } from '@mui/icons-material';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
 import { plainModal } from 'utils/Modals';
+import useAxiosPrivate from 'hooks/useAxiosPrivate';
+
+import { IProduct } from 'interfaces/IProduct';
 
 const URL = 'v2/products';
 
@@ -117,13 +119,23 @@ const ProductsAdmin: FC = () => {
                   $ {product?.price.$numberDecimal.toString()}
                 </TableCell>
                 <TableCell>
-                  <Link to={`/admin/products/${product._id}`}>
-                    <Edit color='primary' />
-                  </Link>
-                  <DeleteForever
-                    color='error'
-                    onClick={() => deleteProduct(product._id)}
-                  />
+                  <IconButton
+                    aria-label='edit'
+                    size='medium'
+                  >
+                    <Link to={`/admin/products/${product._id}`}>
+                      <Edit color='primary' />
+                    </Link>
+                  </IconButton>
+                  <IconButton
+                    aria-label='delete'
+                    size='medium'
+                  >
+                    <DeleteForever
+                      color='error'
+                      onClick={() => deleteProduct(product._id)}
+                    />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import AddressForm from 'components/Admin/AddressForm';
 import { plainModal } from 'utils/Modals';
+import GoBack from 'components/Admin/Forms/GoBack/GoBack';
 
 import { INaturalPerson } from 'interfaces/INaturalPerson';
 import { styles } from './styles';
@@ -95,7 +96,8 @@ const ClientsFormAdmin: FC = () => {
   }, []);
 
   return (
-    <>
+    <Box>
+      <GoBack to='/admin/clients' />
       <Box sx={styles.boxContainer}>
         <Box
           component='form'
@@ -144,7 +146,7 @@ const ClientsFormAdmin: FC = () => {
           </Button>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 

@@ -20,7 +20,7 @@ export interface IConfirmModalParams {
   message: string;
   confirmText: string;
   cancelText: string;
-  callback(): Promise<any>;
+  callback(): Promise<any> | void;
 };
 
 export interface IImagePreviewModalParams {

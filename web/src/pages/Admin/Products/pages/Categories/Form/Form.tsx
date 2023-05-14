@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 import useAxiosPrivate from 'hooks/useAxiosPrivate';
 import { plainModal } from 'utils/Modals';
+import GoBack from 'components/Admin/Forms/GoBack';
 
 import { IProductCategory } from 'interfaces/IProductCategory';
 import { styles } from './styles';
@@ -76,29 +77,32 @@ const ProductsFormAdmin: FC = () => {
   }, []);
 
   return (
-    <Box sx={styles.boxContainer}>
-      <Box
-        component='form'
-        sx={styles.boxForm}
-        onSubmit={_onSave}
-      >
-        <TextField
-          label='Name'
-          value={_name}
-          onChange={e => _setName(e.target.value)}
-          variant='standard'
-          fullWidth
-          required
-          margin='dense'
-        />
-        <Button
-          type='submit'
-          variant='contained'
-          sx={styles.button}
-          fullWidth
+    <Box>
+      <GoBack to='/admin/products/categories' />
+      <Box sx={styles.boxContainer}>
+        <Box
+          component='form'
+          sx={styles.boxForm}
+          onSubmit={_onSave}
         >
-          Save
-        </Button>
+          <TextField
+            label='Name'
+            value={_name}
+            onChange={e => _setName(e.target.value)}
+            variant='standard'
+            fullWidth
+            required
+            margin='dense'
+          />
+          <Button
+            type='submit'
+            variant='contained'
+            sx={styles.button}
+            fullWidth
+          >
+            Save
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
